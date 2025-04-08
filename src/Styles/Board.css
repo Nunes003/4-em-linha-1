@@ -1,0 +1,46 @@
+.game-board{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f0f0f0;
+}
+
+#board {
+  background-color: blue;
+  width: 540px;
+  height: 630px;
+
+  border: 5px solid black;
+
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.row {
+  display: flex;
+  width: 100%;
+}
+
+.cell {
+  width: 70px;
+  height: 70px;
+  background-color: white;
+  border: 2px solid black;
+  border-radius: 50%;
+  margin: 5px;
+  box-sizing: border-box;
+}
+
+.cell.red {
+  background-color: red;
+}
+
+.cell.blue {
+  background-color: yellow;
+}
+
+.cell:hover {
+  opacity: 0.8;
+  cursor: pointer;
+}

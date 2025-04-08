@@ -1,10 +1,17 @@
-import Layout from './Components/Layout/Layout';
-import './Styles/App.css';
+import Board from "./Components/Board/board";
+import Header from "./Components/header";
+import Footer from "./Components/footer";
+import "./Styles/App.css";
+import "./Styles/Board.css";
+import "./Styles/Header.css";
+import "./Styles/Dashboard.css";
 
 export default function App() {
   return (
-    <Layout>
-      <h1>Welcome to My App</h1>
-    </Layout>
+    <>
+      <Header />
+      <Board />
+      <Footer />
+    </>
   );
 }
