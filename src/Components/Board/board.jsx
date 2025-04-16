@@ -163,9 +163,7 @@ export default function Board({
     return board[0].every((cell) => cell !== null);
   };
 
-  function backToMenu() {
-    window.location.href = 'http://localhost:3000/';
-  }
+ 
 
   return (
     <div className="game-board">
@@ -201,9 +199,7 @@ export default function Board({
       <button onClick={initializeBoard} className="restart-btn">
         Reiniciar Jogo
       </button>
-      <button onClick={backToMenu} className="restart-btn">
-        Escolher outro modo de Jogo
-      </button>
+      
     </div>
   );
 }

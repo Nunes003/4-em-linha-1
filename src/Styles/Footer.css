@@ -1,21 +1,19 @@
 .footer {
-    background-color: #20232a;
-    color: #61dafb;
-    padding: 1rem;
-    text-align: center;
-    font-size: 0.9rem;
-    margin-top: 11rem;
-    border-radius: 20px;
-    
-  }
-  
-  .footer-link {
-    color: #61dafb;
-    text-decoration: none;
-    transition: color 0.3s ease;
-  }
-  
-  .footer-link:hover {
-    color: #21a1f1;
-  }
-  
+  background-color: #20232a;
+  color: #61dafb;
+  padding: 1rem;
+  text-align: center;
+  font-size: 0.9rem;
+  position: relative;
+  bottom: -196px;
+}
+
+.footer-link {
+  color: #61dafb;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.footer-link:hover {
+  color: #21a1f1;
+}

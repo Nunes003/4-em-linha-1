@@ -1,4 +1,9 @@
 .game-header {
+
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
   border-radius: 20px;
   background-color: #033c76c2;
   color: #ffffff;

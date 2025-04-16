@@ -50,8 +50,21 @@ export default function Welcome() {
     }
 
     setGameStarted(true);
+    document.querySelector('.return-btn').style.display = 'block';
     return true;
   };
+
+  const instructionsContent = (
+    <div className="instructions-container">
+      <span className="instructions-title">Como jogar?</span>
+      <div className="instructions-content">
+        <span className="instructions-text">🔴 Cada jogador joga alternadamente.</span>
+        <span className="instructions-text">🟡 O objetivo é alinhar 4 peças na horizontal, vertical ou diagonal.</span>
+        <span className="instructions-text">🎯 Clique na coluna para soltar a peça. O primeiro a alinhar 4 vence!</span>
+      </div>
+    </div>
+  );
+  
 
   return (
     <div className="welcome-container">
@@ -89,7 +102,8 @@ export default function Welcome() {
 
       <button
         className="how-to-play-btn"
-        onClick={() => setShowInstructions(!showInstructions)}>
+        onClick={() => setShowInstructions(!showInstructions)}
+      >
         {showInstructions ? (
           'Esconder Instruções'
         ) : (
@@ -105,15 +119,7 @@ export default function Welcome() {
       </button>
 
       {showInstructions && (
-        <div className="instructions-box">
-          <p>
-            🔴 Cada jogador joga alternadamente. <br />
-            🟡 O objetivo é alinhar 4 peças na horizontal, vertical ou diagonal.{' '}
-            <br />
-            🎯 Clique na coluna para soltar a peça. O primeiro a alinhar 4
-            vence!
-          </p>
-        </div>
+        <Popup message={instructionsContent} onClose={() => setShowInstructions(false)} />
       )}
 
       {showPopup && (
