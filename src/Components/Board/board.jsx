@@ -1,135 +1,151 @@
-import { useEffect, useState } from "react";
-import DashBoard from "./dashboard";
+import { useState, useEffect } from 'react';
 
-export default function Board() {
+export default function Board({
+  mode,
+  player1Name,
+  player2Name,
+  player3Name,
+  player1Piece,
+  player2Piece,
+  player3Piece,
+}) {
   const rows = 6;
   const columns = 7;
 
-  const playRed = "R";
-  const playBlue = "B";
-  const [currentPlayer, setCurrentPlayer] = useState(playRed);
-  const [gameover, setGameover] = useState(false);
   const [board, setBoard] = useState([]);
+  const [currentPlayer, setCurrentPlayer] = useState(player1Piece);
+  const [gameover, setGameover] = useState(false);
   const [winner, setWinner] = useState(null);
 
   useEffect(() => {
-    setGame();
+    initializeBoard();
   }, []);
 
-  useEffect(() => {
-    if (gameover && winner) {
-      setTimeout(() => {
-        alert(`Jogador ${winner === "R" ? "Vermelho" : "Amarelo"} venceu!`);
-      }, 100);
-    }
-  }, [gameover, winner]);
-
-  // função para criar o tabuleiro
-  function setGame() {
-    const newBoard = [];
-
-    for (let r = 0; r < rows; r++) {
-      const row = [];
-      for (let c = 0; c < columns; c++) {
-        row.push(0);
-      }
-      newBoard.push(row);
-    }
-
+  const initializeBoard = () => {
+    const newBoard = Array(rows)
+      .fill(null)
+      .map(() => Array(columns).fill(null));
     setBoard(newBoard);
-  }
+    setCurrentPlayer(player1Piece);
+    setGameover(false);
+    setWinner(null);
+  };
 
-  // função para colocar a peça e verifica o posionamento da ultima peça
-  function handleClick(cIndex) {
+  const handleClick = (colIndex) => {
     if (gameover) return;
 
-    const newBoard = [...board.map((row) => [...row])];
+    const newBoard = [...board];
+    for (let row = rows - 1; row >= 0; row--) {
+      if (!newBoard[row][colIndex]) {
+        newBoard[row][colIndex] = currentPlayer;
 
-    // Começa da última linha e sobe
-    for (let r = rows - 1; r >= 0; r--) {
-      if (newBoard[r][cIndex] === 0) {
-        newBoard[r][cIndex] = currentPlayer;
-
-        if (checkWinner(newBoard, currentPlayer, r, cIndex)) {
-          setBoard(newBoard);
+        if (checkWinner(newBoard, row, colIndex, currentPlayer)) {
           setGameover(true);
           setWinner(currentPlayer);
-          return;
+        } else {
+          setCurrentPlayer(
+            mode === '1vs1'
+              ? currentPlayer === player1Piece
+                ? player2Piece
+                : player1Piece
+              : currentPlayer === player1Piece
+              ? player3Piece
+              : player1Piece
+          );
         }
 
         setBoard(newBoard);
-        setCurrentPlayer(currentPlayer === playRed ? playBlue : playRed);
         return;
       }
     }
-  }
+  };
 
-  function checkWinner(board, player, row, col) {
+  const checkWinner = (board, row, col, piece) => {
     const directions = [
-      [0, 1], // horizontal →
-      [1, 0], // vertical ↓
-      [1, 1], // diagonal ↘
-      [1, -1], // diagonal ↙
+      { row: 0, col: 1 }, // Horizontal
+      { row: 1, col: 0 }, // Vertical
+      { row: 1, col: 1 }, // Diagonal (↘)
+      { row: 1, col: -1 }, // Diagonal (↙)
     ];
 
-    for (let [dr, dc] of directions) {
+    for (const { row: dRow, col: dCol } of directions) {
       let count = 1;
 
-      // Verifica para frente
-      let r = row + dr;
-      let c = col + dc;
-      while (
-        r >= 0 &&
-        r < rows &&
-        c >= 0 &&
-        c < columns &&
-        board[r][c] === player
-      ) {
-        count++;
-        r += dr;
-        c += dc;
-      }
+      // Verificar na direção positiva
+      count += countInDirection(board, row, col, dRow, dCol, piece);
 
-      // Verifica para trás
-      r = row - dr;
-      c = col - dc;
-      while (
-        r >= 0 &&
-        r < rows &&
-        c >= 0 &&
-        c < columns &&
-        board[r][c] === player
-      ) {
-        count++;
-        r -= dr;
-        c -= dc;
-      }
+      // Verificar na direção negativa
+      count += countInDirection(board, row, col, -dRow, -dCol, piece);
 
       if (count >= 4) return true;
     }
 
     return false;
-  }
+  };
+
+  const countInDirection = (board, row, col, dRow, dCol, piece) => {
+    let count = 0;
+    let r = row + dRow;
+    let c = col + dCol;
+
+    while (
+      r >= 0 &&
+      r < rows &&
+      c >= 0 &&
+      c < columns &&
+      board[r][c] === piece
+    ) {
+      count++;
+      r += dRow;
+      c += dCol;
+    }
+
+    return count;
+  };
+
+  const getPieceClass = (cell) => {
+    switch (cell) {
+      case 'R':
+        return 'red-piece';
+      case 'Y':
+        return 'yellow-piece';
+      case 'G':
+        return 'green-piece';
+      case 'P':
+        return 'purple-piece';
+      case 'RGB':
+        return 'rainbow-piece';
+      default:
+        return '';
+    }
+  };
 
   return (
     <div className="game-board">
-        <div id="board">
-            {board.map((row, rIndex) => (
-                <div key={rIndex} className="row">
-                {row.map((cell, cIndex) => (
-                    <div
-                    key={cIndex}
-                    className={`cell ${
-                        cell === "R" ? "red" : cell === "B" ? "blue" : ""
-                    }`}
-                    onClick={() => handleClick(cIndex)}
-                    ></div>
-                ))}
-                </div>
-            ))}
+      {gameover && (
+        <div className="winner-message">
+          {winner === player1Piece
+            ? `${player1Name} venceu!`
+            : mode === '1vs1'
+            ? `${player2Name} venceu!`
+            : `${player3Name} venceu!`}
         </div>
-        
-        <DashBoard currentPlayer={currentPlayer} gameover={gameover} winner={winner} onRestart={setGame}/>
+      )}
+      <div id="board">
+        {board.map((row, rowIndex) => (
+          <div key={rowIndex} className="row">
+            {row.map((cell, colIndex) => (
+              <div
+                key={colIndex}
+                className={`cell ${getPieceClass(cell)}`}
+                onClick={() => handleClick(colIndex)}></div>
+            ))}
+          </div>
+        ))}
+      </div>
+      <button onClick={initializeBoard} className="restart-btn">
+        Reiniciar Jogo
+      </button>
     </div>
   );
 }

@@ -1,21 +1,34 @@
-.game-board{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    background-color: #f0f0f0;
-    
+.game-board {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  font-family: 'Arial', sans-serif;
 }
 
 #board {
-  background-color: blue;
-  width: 540px;
-  height: 630px;
-
-  border: 5px solid black;
-
+  background: linear-gradient(to bottom, #1e3c72, #2a5298);
+  width: 560px;
+  height: 490px;
+  border-radius: 15px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
   display: flex;
   flex-wrap: wrap;
+  padding: 15px;
+  position: relative;
+  overflow: hidden;
+}
+
+#board::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 20px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 15px 15px 0 0;
 }
 
 .row {
@@ -26,22 +39,128 @@
 .cell {
   width: 70px;
   height: 70px;
-  background-color: white;
-  border: 2px solid black;
+  background-color: rgba(255, 255, 255, 0.1);
+  border: 2px solid rgba(255, 255, 255, 0.2);
   border-radius: 50%;
   margin: 5px;
   box-sizing: border-box;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
 }
 
-.cell.red {
-  background-color: red;
-}
-
-.cell.blue {
-  background-color: yellow;
+.cell::before {
+  content: '';
+  position: absolute;
+  top: -10px;
+  left: -10px;
+  right: -10px;
+  bottom: -10px;
+  background: radial-gradient(circle at center, transparent 60%, rgba(255, 255, 255, 0.1) 100%);
+  border-radius: 50%;
 }
 
 .cell:hover {
-  opacity: 0.8;
+  transform: scale(1.05);
+  background-color: rgba(255, 255, 255, 0.2);
+  box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+}
+
+.piece {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  box-shadow: inset 0 -3px 5px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.piece::after {
+  content: '';
+  position: absolute;
+  top: 10%;
+  left: 10%;
+  width: 80%;
+  height: 80%;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* Peças coloridas com efeitos modernos */
+.red-piece {
+  background: linear-gradient(to bottom, #ff416c, #ff4b2b);
+  box-shadow: 0 4px 8px rgba(255, 75, 43, 0.4);
+}
+
+.yellow-piece {
+  background: linear-gradient(to bottom, #ffd200, #f7971e);
+  box-shadow: 0 4px 8px rgba(247, 151, 30, 0.4);
+}
+
+.green-piece {
+  background: linear-gradient(to bottom, #56ab2f, #a8e063);
+  box-shadow: 0 4px 8px rgba(86, 171, 47, 0.4);
+}
+
+.purple-piece {
+  background: linear-gradient(to bottom, #8e2de2, #4a00e0);
+  box-shadow: 0 4px 8px rgba(74, 0, 224, 0.4);
+}
+
+.rainbow-piece {
+  background: linear-gradient(135deg, 
+    #ff0000, #ff7700, #ffdd00, 
+    #00ff00, #0000ff, #8a2be2);
+  box-shadow: 0 4px 12px rgba(138, 43, 226, 0.5);
+  background-size: 400% 400%;
+  animation: rainbow 4s ease infinite;
+}
+
+@keyframes rainbow {
+  0% { background-position: 0% 50% }
+  50% { background-position: 100% 50% }
+  100% { background-position: 0% 50% }
+}
+
+/* Botão de reiniciar estilizado */
+.restart-btn {
+  margin-top: 30px;
+  padding: 12px 30px;
+  background: linear-gradient(to right, #00c6ff, #0072ff);
+  color: white;
+  border: none;
+  border-radius: 50px;
+  font-size: 1.1rem;
   cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 114, 255, 0.4);
+}
+
+.restart-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0, 114, 255, 0.6);
+}
+
+.restart-btn:active {
+  transform: translateY(1px);
+}
+
+/* Mensagem do vencedor */
+.winner-message {
+  position: absolute;
+  top: 600px;
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 15px 30px;
+  border-radius: 50px;
+  font-size: 1.5rem;
+  z-index: 100;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
 }

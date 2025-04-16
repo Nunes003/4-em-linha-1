@@ -1,81 +1,97 @@
-import { useState } from "react";
-import PieceSelector from "./PieceSelector";
+import { useState } from 'react';
+import Popup from '../Pop-Up/pop-up';
+import GameModeSelector from './gameModeSelector';
+import Board from '../Board/board';
 
 export default function Welcome() {
-  const [selectedMode, setSelectedMode] = useState(""); // "" | "1vs1" | "1vsPC"
-  const [player1Piece, setPlayer1Piece] = useState("R");
-  const [player2Piece, setPlayer2Piece] = useState("B");
+  const [selectedMode, setSelectedMode] = useState(''); // "" | "1vs1" | "1vsPC"
+  const [player1Piece, setPlayer1Piece] = useState('R');
+  const [player2Piece, setPlayer2Piece] = useState('Y');
+  const [player3Piece, setPlayer3Piece] = useState('R');
+  const [player1Name, setPlayer1Name] = useState('');
+  const [player2Name, setPlayer2Name] = useState('');
+  const [player3Name, setPlayer3Name] = useState('');
   const [showInstructions, setShowInstructions] = useState(false);
+  const [popupMessage, setPopupMessage] = useState('');
+  const [showPopup, setShowPopup] = useState(false);
+  const [gameStarted, setGameStarted] = useState(false); // para apresentar o tabuleiro
+
+  const validatePlayers = () => {
+    console.log('Modo de Jogo Selecionado:', selectedMode);
+
+    if (selectedMode === '1vs1') {
+      if (!player1Name || !player2Name) {
+        setPopupMessage('Preencha o nome dos jogadores.');
+        setShowPopup(true);
+        return false;
+      }
+
+      if (
+        player1Name.trim().toLowerCase() === player2Name.trim().toLowerCase()
+      ) {
+        setPopupMessage('Os nomes dos jogadores não podem ser iguais.');
+        setShowPopup(true);
+        return false;
+      }
+
+      if (player1Piece === player2Piece) {
+        setPopupMessage('Cada jogador deve escolher uma peça diferente.');
+        setShowPopup(true);
+        return false;
+      }
+    }
+
+    if (selectedMode === '1vsPC') {
+      if (!player3Name) {
+        setPopupMessage('Preencha o nome do jogador.');
+        setShowPopup(true);
+        return false;
+      }
+    }
+
+    setGameStarted(true);
+    return true;
+  };
 
   return (
     <div className="welcome-container">
-      <h1>Bem-vindo Jogador!</h1>
-      <p className="welcome-description">
-        O clássico jogo de estratégia! Conecte 4 peças da sua cor antes do seu
-        adversário.
-      </p>
+      <span className="title-welcome">Bem-vindo Jogador!</span>
 
-      <div className="button-group">
-        <button
-          className={`game-mode-btn ${selectedMode === "1vs1" ? "active" : ""}`}
-          onClick={() =>
-            setSelectedMode((prev) => (prev === "1vs1" ? "" : "1vs1"))
-          }
-        >
-          🤼‍♂️ 1 vs 1
-        </button>
-
-        <button
-          className={`game-mode-btn ${
-            selectedMode === "1vsPC" ? "active" : ""
-          }`}
-          onClick={() =>
-            setSelectedMode((prev) => (prev === "1vsPC" ? "" : "1vsPC"))
-          }
-        >
-          🧠 1 vs PC
-        </button>
-      </div>
-
-      {selectedMode === "1vs1" && (
-        <div className="select-game-box">
-          <div className="player-setup">
-            <label className="piece-selector">Escolha as peças:</label>
-            <PieceSelector
-              
-              value={player1Piece}
-              onChange={setPlayer1Piece}
-            />
-
-            {/* <input type="text" placeholder="Nome do Jogador 2" />
-            <PieceSelector
-              label="Peça do Jogador 2"
-              value={player2Piece}
-              onChange={setPlayer2Piece}
-            /> */}
-          </div>
-        </div>
-      )}
-
-      {selectedMode === "1vsPC" && (
-        <div className="select-game-box">
-          <div className="player-setup">
-            <input type="text" placeholder="Nome do Jogador" />
-            <PieceSelector
-              label="Peça do Jogador"
-              value={player1Piece}
-              onChange={setPlayer1Piece}
-            />
-          </div>
-        </div>
+      {!gameStarted ? (
+        <GameModeSelector
+          selectedMode={selectedMode}
+          setSelectedMode={setSelectedMode}
+          player1Piece={player1Piece}
+          setPlayer1Piece={setPlayer1Piece}
+          player2Piece={player2Piece}
+          setPlayer2Piece={setPlayer2Piece}
+          player3Piece={player3Piece}
+          setPlayer3Piece={setPlayer3Piece}
+          player1Name={player1Name}
+          setPlayer1Name={setPlayer1Name}
+          player2Name={player2Name}
+          setPlayer2Name={setPlayer2Name}
+          player3Name={player3Name}
+          setPlayer3Name={setPlayer3Name}
+          validatePlayers={validatePlayers}
+        />
+      ) : (
+        <Board
+          mode={selectedMode}
+          player1Name={player1Name}
+          player2Name={player2Name}
+          player3Name={player3Name}
+          player1Piece={player1Piece}
+          player2Piece={player2Piece}
+          player3Piece={player3Piece}
+        />
       )}
 
       <button
         className="how-to-play-btn"
-        onClick={() => setShowInstructions(!showInstructions)}
-      >
+        onClick={() => setShowInstructions(!showInstructions)}>
         {showInstructions ? (
-          "Esconder Instruções"
+          'Esconder Instruções'
         ) : (
           <div className="how-to-play-content">
             <img
@@ -92,12 +108,16 @@ export default function Welcome() {
         <div className="instructions-box">
           <p>
             🔴 Cada jogador joga alternadamente. <br />
-            🟡 O objetivo é alinhar 4 peças na horizontal, vertical ou diagonal.{" "}
+            🟡 O objetivo é alinhar 4 peças na horizontal, vertical ou diagonal.{' '}
             <br />
             🎯 Clique na coluna para soltar a peça. O primeiro a alinhar 4
             vence!
           </p>
         </div>
+      )}
+
+      {showPopup && (
+        <Popup message={popupMessage} onClose={() => setShowPopup(false)} />
       )}
     </div>
   );
