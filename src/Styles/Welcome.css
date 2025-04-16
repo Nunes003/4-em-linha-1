@@ -1,0 +1,169 @@
+.welcome-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  color: #ffffff;
+  padding: 50px 20px;
+}
+
+.welcome-container h1 {
+  font-size: 3rem;
+  margin-bottom: 20px;
+  text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.5);
+}
+
+.welcome-description {
+  font-size: 1.3rem;
+  font-weight: 500;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 20px 30px;
+  border-radius: 15px;
+  box-shadow: 0px 0px 12px rgba(0, 132, 255, 0.4);
+  max-width: 700px;
+  margin: 0 auto 40px auto;
+  line-height: 1.6;
+  backdrop-filter: blur(4px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.button-group {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.game-mode-btn {
+  background-color: #086fc9;
+  border: 3px solid #ffffff;
+  color: white;
+  padding: 15px 30px;
+  font-size: 1.1rem;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.15);
+  position: relative;
+  opacity: 1;
+}
+
+.game-mode-btn:hover {
+  background-color: #0060b3;
+  transform: scale(1.05);
+}
+
+.game-mode-btn.active {
+  background-color: #002f60;
+  border: 2px solid #00d4ff;
+  box-shadow: 0 0 18px rgba(0, 212, 255, 0.6);
+  transform: scale(1.07);
+  opacity: 1;
+}
+
+.game-mode-btn.active::after {
+  content: "";
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  height: 4px;
+  width: 60%;
+  background: #00cfff;
+  border-radius: 10px;
+}
+
+.select-game-box {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 16px;
+  padding: 30px;
+  margin-top: 30px;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+  color: #ffffff;
+  font-size: 1rem;
+  text-align: center;
+  backdrop-filter: blur(6px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 8px 24px rgba(0, 132, 255, 0.2);
+  animation: fadeIn 0.4s ease-in-out;
+  transition: transform 0.3s ease;
+}
+
+.select-game-box:hover {
+  transform: scale(1.02);
+  box-shadow: 0 10px 30px rgba(0, 132, 255, 0.3);
+}
+
+.player-setup {
+  display: flex;
+  flex-direction: column;
+
+  width: 100%;
+}
+
+.player-setup input {
+  margin: 20px 0;
+  padding: 10px 15px;
+  border-radius: 8px;
+  border: none;
+  font-size: 1rem;
+  width: 220px;
+  max-width: 90%;
+  background-color: #e9f4ff;
+  color: #333;
+}
+
+.how-to-play-btn {
+  background-color: transparent;
+  border: 2px solid white;
+  padding: 10px 20px;
+  color: white;
+  font-size: 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: 20px;
+  transition: background-color 0.3s;
+}
+
+.how-to-play-btn:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.how-to-play-content {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.how-to-play-icon {
+  width: 30px;
+  height: 30px;
+  object-fit: contain;
+}
+
+.instructions-box {
+  background-color: rgba(0, 0, 0, 0.4);
+  border-radius: 12px;
+  padding: 20px;
+  margin-top: 20px;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+  color: #e5f3ff;
+  font-size: 1rem;
+  text-align: left;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
