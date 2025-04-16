@@ -17,16 +17,45 @@ export default function Board({
   const [gameover, setGameover] = useState(false);
   const [winner, setWinner] = useState(null);
 
+  document.querySelector('.title-welcome').innerText = 'Boa sorte Jogadores!';
+
+  const getPieceClass = (cell) => {
+    switch (cell) {
+      case 'R':
+        return 'red-piece';
+      case 'Y':
+        return 'yellow-piece';
+      case 'G':
+        return 'green-piece';
+      case 'P':
+        return 'purple-piece';
+      case 'RGB':
+        return 'rainbow-piece';
+      default:
+        return '';
+    }
+  };
+
   useEffect(() => {
     initializeBoard();
   }, []);
+
+  useEffect(() => {
+    if (mode === '1vsPC' && currentPlayer === player2Piece && !gameover) {
+      // Jogada do PC após um pequeno atraso
+      const timeout = setTimeout(() => {
+        playPCMove();
+      }, 200);
+      return () => clearTimeout(timeout);
+    }
+  }, [currentPlayer, board]);
 
   const initializeBoard = () => {
     const newBoard = Array(rows)
       .fill(null)
       .map(() => Array(columns).fill(null));
     setBoard(newBoard);
-    setCurrentPlayer(player1Piece);
+    setCurrentPlayer(mode === '1vsPC' ? player3Piece : player1Piece);
     setGameover(false);
     setWinner(null);
   };
@@ -34,24 +63,56 @@ export default function Board({
   const handleClick = (colIndex) => {
     if (gameover) return;
 
-    const newBoard = [...board];
+    if (mode === '1vsPC' && currentPlayer !== player3Piece) return; // Só o player joga com clique
+
+    makeMove(colIndex, currentPlayer);
+  };
+
+  const playPCMove = () => {
+    const validCols = [];
+    for (let col = 0; col < columns; col++) {
+      if (board[0][col] === null) {
+        validCols.push(col);
+      }
+    }
+
+    if (validCols.length === 0) return;
+
+    const randomCol = validCols[Math.floor(Math.random() * validCols.length)];
+    makeMove(randomCol, player2Piece);
+  };
+
+  const makeMove = (colIndex, piece) => {
+    const newBoard = [...board.map((row) => [...row])];
     for (let row = rows - 1; row >= 0; row--) {
       if (!newBoard[row][colIndex]) {
-        newBoard[row][colIndex] = currentPlayer;
+        newBoard[row][colIndex] = piece;
 
-        if (checkWinner(newBoard, row, colIndex, currentPlayer)) {
+        if (checkWinner(newBoard, row, colIndex, piece)) {
           setGameover(true);
-          setWinner(currentPlayer);
+          setWinner(piece);
+        } else if (isBoardFull(newBoard)) {
+          setGameover(true);
+          setWinner('draw');
         } else {
-          setCurrentPlayer(
-            mode === '1vs1'
-              ? currentPlayer === player1Piece
-                ? player2Piece
+          if (mode === '1vs1') {
+            setCurrentPlayer(
+              piece === player1Piece ? player2Piece : player1Piece
+            );
+          } else if (mode === '1vsPC') {
+            setCurrentPlayer(
+              piece === player3Piece ? player2Piece : player3Piece
+            );
+          } else {
+            // 3 jogadores
+            setCurrentPlayer(
+              piece === player1Piece
+                ? player3Piece
+                : piece === player3Piece
+                ? player1Piece
                 : player1Piece
-              : currentPlayer === player1Piece
-              ? player3Piece
-              : player1Piece
-          );
+            );
+          }
         }
 
         setBoard(newBoard);
@@ -64,19 +125,14 @@ export default function Board({
     const directions = [
       { row: 0, col: 1 }, // Horizontal
       { row: 1, col: 0 }, // Vertical
-      { row: 1, col: 1 }, // Diagonal (↘)
-      { row: 1, col: -1 }, // Diagonal (↙)
+      { row: 1, col: 1 }, // Diagonal ↘
+      { row: 1, col: -1 }, // Diagonal ↙
     ];
 
     for (const { row: dRow, col: dCol } of directions) {
       let count = 1;
-
-      // Verificar na direção positiva
       count += countInDirection(board, row, col, dRow, dCol, piece);
-
-      // Verificar na direção negativa
       count += countInDirection(board, row, col, -dRow, -dCol, piece);
-
       if (count >= 4) return true;
     }
 
@@ -103,34 +159,32 @@ export default function Board({
     return count;
   };
 
-  const getPieceClass = (cell) => {
-    switch (cell) {
-      case 'R':
-        return 'red-piece';
-      case 'Y':
-        return 'yellow-piece';
-      case 'G':
-        return 'green-piece';
-      case 'P':
-        return 'purple-piece';
-      case 'RGB':
-        return 'rainbow-piece';
-      default:
-        return '';
-    }
+  const isBoardFull = (board) => {
+    return board[0].every((cell) => cell !== null);
   };
+
+  function backToMenu() {
+    window.location.href = 'http://localhost:3000/';
+  }
 
   return (
     <div className="game-board">
       {gameover && (
         <div className="winner-message">
-          {winner === player1Piece
+          {winner === 'draw'
+            ? 'Empate!'
+            : winner === player1Piece
             ? `${player1Name} venceu!`
-            : mode === '1vs1'
-            ? `${player2Name} venceu!`
+            : winner === player2Piece
+            ? `${
+                mode === '1vsPC'
+                  ? 'Computador venceu!'
+                  : player2Name + ' venceu!'
+              }`
             : `${player3Name} venceu!`}
         </div>
       )}
+
       <div id="board">
         {board.map((row, rowIndex) => (
           <div key={rowIndex} className="row">
@@ -143,8 +197,12 @@ export default function Board({
           </div>
         ))}
       </div>
+
       <button onClick={initializeBoard} className="restart-btn">
         Reiniciar Jogo
+      </button>
+      <button onClick={backToMenu} className="restart-btn">
+        Escolher outro modo de Jogo
       </button>
     </div>
   );

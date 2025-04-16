@@ -20,16 +20,7 @@
   overflow: hidden;
 }
 
-#board::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 20px;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 15px 15px 0 0;
-}
+
 
 .row {
   display: flex;

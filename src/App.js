@@ -9,6 +9,7 @@ import './Styles/Welcome.css';
 import './Styles/PieceSelector.css';
 import './Styles/PopUp.css';
 import './Styles/GameModeSelector.css';
+import './Styles/Footer.css';
 
 export default function App() {
   return (
