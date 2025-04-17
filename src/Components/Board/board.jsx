@@ -17,6 +17,10 @@ export default function Board({
   const [gameover, setGameover] = useState(false);
   const [winner, setWinner] = useState(null);
 
+  const [timer, setTimer] = useState(10);
+  const [isTimerActive, setIsTimerActive] = useState(true);
+  const [skippedPlayer, setSkippedPlayer] = useState(null);
+
   document.querySelector('.title-welcome').innerText = 'Boa sorte Jogadores!';
 
   const getPieceClass = (cell) => {
@@ -37,33 +41,106 @@ export default function Board({
   };
 
   useEffect(() => {
+    if (gameover || !isTimerActive) return;
+  
+    if (timer === 0) {
+      setIsTimerActive(false);
+    
+      let skippedName = '';
+      if (mode === '1vsPC') {
+        skippedName = player3Name;
+      } else {
+        if (currentPlayer === player1Piece) skippedName = player1Name;
+        else if (currentPlayer === player2Piece) skippedName = player2Name;
+        else if (currentPlayer === player3Piece) skippedName = player3Name;
+      }
+
+      setSkippedPlayer({ name: skippedName, piece: currentPlayer });
+
+    
+      setTimeout(() => {
+        if (mode === '1vs1') {
+          setCurrentPlayer(
+            currentPlayer === player1Piece ? player2Piece : player1Piece
+          );
+        } else if (mode === '1vsPC') {
+          setCurrentPlayer(
+            currentPlayer === player3Piece ? player2Piece : player3Piece
+          );
+        } else {
+          setCurrentPlayer(
+            currentPlayer === player1Piece
+              ? player3Piece
+              : currentPlayer === player3Piece
+              ? player2Piece
+              : player1Piece
+          );
+        }
+    
+        setTimer(10);
+        setIsTimerActive(true);
+        setSkippedPlayer(null);
+      }, 2000);
+    
+      return;
+    }
+    
+  
+    const countdown = setInterval(() => {
+      setTimer((prev) => prev - 1);
+    }, 1000);
+  
+    return () => clearInterval(countdown);
+  }, [timer, isTimerActive, currentPlayer, gameover]);
+  
+
+  useEffect(() => {
     initializeBoard();
   }, []);
 
   useEffect(() => {
     if (mode === '1vsPC' && currentPlayer === player2Piece && !gameover) {
-      // Jogada do PC após um pequeno atraso
+      setIsTimerActive(false);
+  
       const timeout = setTimeout(() => {
         playPCMove();
-      }, 200);
+        setIsTimerActive(true);
+      }, 2000);
+  
       return () => clearTimeout(timeout);
     }
-  }, [currentPlayer, board]);
+  }, [currentPlayer, board, gameover]);
+  
 
   const initializeBoard = () => {
     const newBoard = Array(rows)
       .fill(null)
       .map(() => Array(columns).fill(null));
     setBoard(newBoard);
-    setCurrentPlayer(mode === '1vsPC' ? player3Piece : player1Piece);
+    
+    let initialPlayer;
+    if (mode === '1vs1') {
+      initialPlayer = Math.random() < 0.5 ? player1Piece : player2Piece;
+    } else if (mode === '1vsPC') {
+      initialPlayer = Math.random() < 0.5 ? player3Piece : player2Piece; // humano ou PC
+    } else {
+      const options = [player1Piece, player2Piece, player3Piece];
+      initialPlayer = options[Math.floor(Math.random() * options.length)];
+    }
+    setCurrentPlayer(initialPlayer);
+
     setGameover(false);
     setWinner(null);
+    setTimer(10);
+    setIsTimerActive(true);
+    setSkippedPlayer(null);
   };
+  
 
   const handleClick = (colIndex) => {
     if (gameover) return;
 
-    if (mode === '1vsPC' && currentPlayer !== player3Piece) return; // Só o player joga com clique
+    if (mode === '1vsPC' && currentPlayer !== player3Piece) return;
 
     makeMove(colIndex, currentPlayer);
   };
@@ -104,7 +181,7 @@ export default function Board({
               piece === player3Piece ? player2Piece : player3Piece
             );
           } else {
-            // 3 jogadores
+            
             setCurrentPlayer(
               piece === player1Piece
                 ? player3Piece
@@ -115,6 +192,8 @@ export default function Board({
           }
         }
 
+        setTimer(10);
+        setIsTimerActive(true);
         setBoard(newBoard);
         return;
       }
@@ -159,6 +238,19 @@ export default function Board({
     return count;
   };
 
+  const getCurrentPlayerName = () => {
+    if (mode === '1vsPC') {
+      if (currentPlayer === player3Piece) return player3Name; // humano
+      if (currentPlayer === player2Piece) return 'Computador'; // PC
+    } else {
+      if (currentPlayer === player1Piece) return player1Name;
+      if (currentPlayer === player2Piece) return player2Name;
+      if (currentPlayer === player3Piece) return player3Name;
+    }
+    return '';
+  };
+  
+
   const isBoardFull = (board) => {
     return board[0].every((cell) => cell !== null);
   };
@@ -182,18 +274,38 @@ export default function Board({
             : `${player3Name} venceu!`}
         </div>
       )}
+      <div className={`timer ${timer <= 3 ? 'timer-warning' : ''}`}>
+        Tempo restante: {timer} segundos
+      </div>
+      <div className="board-container">
+        <div className="player-info">
+          <div className="player-status-line">
+            <div className={`current-player ${getPieceClass(currentPlayer)}`}>
+              É a vez de: <strong>{getCurrentPlayerName()}</strong>
+            </div>
 
-      <div id="board">
-        {board.map((row, rowIndex) => (
-          <div key={rowIndex} className="row">
-            {row.map((cell, colIndex) => (
-              <div
-                key={colIndex}
-                className={`cell ${getPieceClass(cell)}`}
-                onClick={() => handleClick(colIndex)}></div>
+            {skippedPlayer && (
+              <div className={`skipped-inline ${getPieceClass(skippedPlayer.piece)}`}>
+                {skippedPlayer.name} perdeu o turno!
+              </div>
+            )}
+          </div>
+        </div>
+
+        <div className="board-wrapper">
+          <div id="board">
+            {board.map((row, rowIndex) => (
+              <div key={rowIndex} className="row">
+                {row.map((cell, colIndex) => (
+                  <div
+                    key={colIndex}
+                    className={`cell ${getPieceClass(cell)}`}
+                    onClick={() => handleClick(colIndex)}></div>
+                ))}
+              </div>
             ))}
           </div>
-        ))}
+        </div>
       </div>
 
       <button onClick={initializeBoard} className="restart-btn">
