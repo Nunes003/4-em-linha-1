@@ -5,7 +5,8 @@
   text-align: center;
   font-size: 0.9rem;
   position: relative;
-  bottom: -196px;
+  bottom: -231px;
+  display: flow;
 }
 
 .footer-link {

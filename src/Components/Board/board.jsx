@@ -9,6 +9,7 @@ export default function Board({
   player2Piece,
   player3Piece,
 }) {
+
   const rows = 6;
   const columns = 7;
 
@@ -285,18 +286,17 @@ export default function Board({
     <div className="game-board">
       {gameover && (
         <div className="winner-message">
-          {winner === 'draw'
-            ? 'Empate!'
-            : winner === player1Piece
-            ? `${player1Name} venceu!`
-            : winner === player2Piece
-            ? `${
-                mode === '1vsPC'
-                  ? 'Computador venceu!'
-                  : player2Name + ' venceu!'
-              }`
-            : `${player3Name} venceu!`}
-        </div>
+        {winner === 'draw' ? (
+          'Empate!'
+        ) : mode === '1vsPC' ? (
+          winner === player3Piece ? `${player3Name} venceu!` : 'Computador venceu!'
+        ) : (
+          winner === player1Piece ? `${player1Name} venceu!` :
+          winner === player2Piece ? `${player2Name} venceu!` :
+          `${player3Name} venceu!`
+        )}
+      </div>
+      
       )}
       <div className={`timer ${timer <= 3 ? 'timer-warning' : ''}`}>
         Tempo restante: {timer} segundos

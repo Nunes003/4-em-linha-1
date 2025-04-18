@@ -7,13 +7,10 @@ export default function Header() {
 
   return (
     <header className="game-header">
-
-      <h1>🎮 4 em Linha</h1>
+      <h1>🟡 4 em Linha</h1>
       <button onClick={backToMenu} className="return-btn">
-        Escolher outro modo de Jogo
+        Voltar ao Menu
       </button>
-
-      
     </header>
   );
 }
