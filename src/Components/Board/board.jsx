@@ -21,6 +21,9 @@ export default function Board({
   const [isTimerActive, setIsTimerActive] = useState(true);
   const [skippedPlayer, setSkippedPlayer] = useState(null);
 
+  const [specialCells, setSpecialCells] = useState([]);
+  const [revealedSpecials, setRevealedSpecials] = useState([]);
+
   document.querySelector('.title-welcome').innerText = 'Boa sorte Jogadores!';
 
   const getPieceClass = (cell) => {
@@ -112,6 +115,18 @@ export default function Board({
   }, [currentPlayer, board, gameover]);
   
 
+  const generateSpecialCells = () => {
+    const special = new Set();
+  
+    while (special.size < 5) {
+      const row = Math.floor(Math.random() * rows);
+      const col = Math.floor(Math.random() * columns);
+      special.add(`${row}-${col}`);
+    }
+  
+    return Array.from(special);
+  };
+  
   const initializeBoard = () => {
     const newBoard = Array(rows)
       .fill(null)
@@ -128,6 +143,9 @@ export default function Board({
       initialPlayer = options[Math.floor(Math.random() * options.length)];
     }
     setCurrentPlayer(initialPlayer);
+
+    const specials = generateSpecialCells();
+    setSpecialCells(specials);               
 
     setGameover(false);
     setWinner(null);
@@ -164,7 +182,14 @@ export default function Board({
     for (let row = rows - 1; row >= 0; row--) {
       if (!newBoard[row][colIndex]) {
         newBoard[row][colIndex] = piece;
-
+  
+        const cellKey = `${row}-${colIndex}`;
+        const playedSpecial = specialCells.includes(cellKey);
+  
+        if (playedSpecial && !revealedSpecials.includes(cellKey)) {
+          setRevealedSpecials((prev) => [...prev, cellKey]);
+        }
+  
         if (checkWinner(newBoard, row, colIndex, piece)) {
           setGameover(true);
           setWinner(piece);
@@ -172,26 +197,23 @@ export default function Board({
           setGameover(true);
           setWinner('draw');
         } else {
-          if (mode === '1vs1') {
-            setCurrentPlayer(
-              piece === player1Piece ? player2Piece : player1Piece
-            );
-          } else if (mode === '1vsPC') {
-            setCurrentPlayer(
-              piece === player3Piece ? player2Piece : player3Piece
-            );
-          } else {
-            
-            setCurrentPlayer(
-              piece === player1Piece
-                ? player3Piece
-                : piece === player3Piece
-                ? player1Piece
-                : player1Piece
-            );
+          if (!playedSpecial) {
+            if (mode === '1vs1') {
+              setCurrentPlayer(piece === player1Piece ? player2Piece : player1Piece);
+            } else if (mode === '1vsPC') {
+              setCurrentPlayer(piece === player3Piece ? player2Piece : player3Piece);
+            } else {
+              setCurrentPlayer(
+                piece === player1Piece
+                  ? player3Piece
+                  : piece === player3Piece
+                  ? player2Piece
+                  : player1Piece
+              );
+            }
           }
         }
-
+  
         setTimer(10);
         setIsTimerActive(true);
         setBoard(newBoard);
@@ -199,6 +221,8 @@ export default function Board({
       }
     }
   };
+  
+  
 
   const checkWinner = (board, row, col, piece) => {
     const directions = [
@@ -299,7 +323,10 @@ export default function Board({
                 {row.map((cell, colIndex) => (
                   <div
                     key={colIndex}
-                    className={`cell ${getPieceClass(cell)}`}
+                    className={`cell ${getPieceClass(cell)} ${
+                      specialCells.includes(`${rowIndex}-${colIndex}`) &&
+                      revealedSpecials.includes(`${rowIndex}-${colIndex}`) ? 'special-cell' : ''
+                    }`}                                  
                     onClick={() => handleClick(colIndex)}></div>
                 ))}
               </div>

@@ -240,5 +240,21 @@ margin-top: 30px;
   max-width: 200px;
   animation: fadeIn 0.3s ease-in-out;
 }
+/*celula especial*/
+.special-cell {
+  border: 3px solid gold !important;
+  box-shadow: 0 0 20px gold;
+  animation: revealSpecial 0.5s ease-out;
+}
 
+@keyframes revealSpecial {
+  0% {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
 
