@@ -9,7 +9,6 @@ export default function Board({
   player2Piece,
   player3Piece,
 }) {
-
   const rows = 6;
   const columns = 7;
 
@@ -46,10 +45,10 @@ export default function Board({
 
   useEffect(() => {
     if (gameover || !isTimerActive) return;
-  
+
     if (timer === 0) {
       setIsTimerActive(false);
-    
+
       let skippedName = '';
       if (mode === '1vsPC') {
         skippedName = player3Name;
@@ -61,7 +60,6 @@ export default function Board({
 
       setSkippedPlayer({ name: skippedName, piece: currentPlayer });
 
-    
       setTimeout(() => {
         if (mode === '1vs1') {
           setCurrentPlayer(
@@ -80,23 +78,21 @@ export default function Board({
               : player1Piece
           );
         }
-    
+
         setTimer(10);
         setIsTimerActive(true);
         setSkippedPlayer(null);
       }, 2000);
-    
+
       return;
     }
-    
-  
+
     const countdown = setInterval(() => {
       setTimer((prev) => prev - 1);
     }, 1000);
-  
+
     return () => clearInterval(countdown);
   }, [timer, isTimerActive, currentPlayer, gameover]);
-  
 
   useEffect(() => {
     initializeBoard();
@@ -105,35 +101,34 @@ export default function Board({
   useEffect(() => {
     if (mode === '1vsPC' && currentPlayer === player2Piece && !gameover) {
       setIsTimerActive(false);
-  
+
       const timeout = setTimeout(() => {
         playPCMove();
         setIsTimerActive(true);
       }, 2000);
-  
+
       return () => clearTimeout(timeout);
     }
   }, [currentPlayer, board, gameover]);
-  
 
   const generateSpecialCells = () => {
     const special = new Set();
-  
+
     while (special.size < 5) {
       const row = Math.floor(Math.random() * rows);
       const col = Math.floor(Math.random() * columns);
       special.add(`${row}-${col}`);
     }
-  
+
     return Array.from(special);
   };
-  
+
   const initializeBoard = () => {
     const newBoard = Array(rows)
       .fill(null)
       .map(() => Array(columns).fill(null));
     setBoard(newBoard);
-    
+
     let initialPlayer;
     if (mode === '1vs1') {
       initialPlayer = Math.random() < 0.5 ? player1Piece : player2Piece;
@@ -146,7 +141,7 @@ export default function Board({
     setCurrentPlayer(initialPlayer);
 
     const specials = generateSpecialCells();
-    setSpecialCells(specials);               
+    setSpecialCells(specials);
 
     setGameover(false);
     setWinner(null);
@@ -154,7 +149,6 @@ export default function Board({
     setIsTimerActive(true);
     setSkippedPlayer(null);
   };
-  
 
   const handleClick = (colIndex) => {
     if (gameover) return;
@@ -183,14 +177,14 @@ export default function Board({
     for (let row = rows - 1; row >= 0; row--) {
       if (!newBoard[row][colIndex]) {
         newBoard[row][colIndex] = piece;
-  
+
         const cellKey = `${row}-${colIndex}`;
         const playedSpecial = specialCells.includes(cellKey);
-  
+
         if (playedSpecial && !revealedSpecials.includes(cellKey)) {
           setRevealedSpecials((prev) => [...prev, cellKey]);
         }
-  
+
         if (checkWinner(newBoard, row, colIndex, piece)) {
           setGameover(true);
           setWinner(piece);
@@ -200,9 +194,13 @@ export default function Board({
         } else {
           if (!playedSpecial) {
             if (mode === '1vs1') {
-              setCurrentPlayer(piece === player1Piece ? player2Piece : player1Piece);
+              setCurrentPlayer(
+                piece === player1Piece ? player2Piece : player1Piece
+              );
             } else if (mode === '1vsPC') {
-              setCurrentPlayer(piece === player3Piece ? player2Piece : player3Piece);
+              setCurrentPlayer(
+                piece === player3Piece ? player2Piece : player3Piece
+              );
             } else {
               setCurrentPlayer(
                 piece === player1Piece
@@ -214,7 +212,7 @@ export default function Board({
             }
           }
         }
-  
+
         setTimer(10);
         setIsTimerActive(true);
         setBoard(newBoard);
@@ -222,8 +220,6 @@ export default function Board({
       }
     }
   };
-  
-  
 
   const checkWinner = (board, row, col, piece) => {
     const directions = [
@@ -274,45 +270,51 @@ export default function Board({
     }
     return '';
   };
-  
 
   const isBoardFull = (board) => {
     return board[0].every((cell) => cell !== null);
   };
 
- 
-
   return (
     <div className="game-board">
       {gameover && (
         <div className="winner-message">
-        {winner === 'draw' ? (
-          'Empate!'
-        ) : mode === '1vsPC' ? (
-          winner === player3Piece ? `${player3Name} venceu!` : 'Computador venceu!'
-        ) : (
-          winner === player1Piece ? `${player1Name} venceu!` :
-          winner === player2Piece ? `${player2Name} venceu!` :
-          `${player3Name} venceu!`
-        )}
-      </div>
-      
+          {winner === 'draw'
+            ? 'Empate!'
+            : mode === '1vsPC'
+            ? winner === player3Piece
+              ? `${player3Name} venceu!`
+              : 'Computador venceu!'
+            : winner === player1Piece
+            ? `${player1Name} venceu!`
+            : winner === player2Piece
+            ? `${player2Name} venceu!`
+            : `${player3Name} venceu!`}
+        </div>
       )}
-      <div className={`timer ${timer <= 3 ? 'timer-warning' : ''}`}>
-        Tempo restante: {timer} segundos
-      </div>
+
       <div className="board-container">
         <div className="player-info">
           <div className="player-status-line">
             <div className={`current-player ${getPieceClass(currentPlayer)}`}>
-              É a vez de: <strong>{getCurrentPlayerName()}</strong>
+              <span>
+                É a vez de: <strong>{getCurrentPlayerName()}</strong>
+              </span>
             </div>
 
             {skippedPlayer && (
-              <div className={`skipped-inline ${getPieceClass(skippedPlayer.piece)}`}>
+              <div
+                className={`skipped-inline ${getPieceClass(
+                  skippedPlayer.piece
+                )}`}>
                 {skippedPlayer.name} perdeu o turno!
               </div>
             )}
+
+            <div className={`timer ${timer <= 4 ? 'timer-warning' : ''}`}>
+              <img className="img-timer" src="./timer.png" alt="timer" />
+              {timer} s
+            </div>
           </div>
         </div>
 
@@ -325,8 +327,10 @@ export default function Board({
                     key={colIndex}
                     className={`cell ${getPieceClass(cell)} ${
                       specialCells.includes(`${rowIndex}-${colIndex}`) &&
-                      revealedSpecials.includes(`${rowIndex}-${colIndex}`) ? 'special-cell' : ''
-                    }`}                                  
+                      revealedSpecials.includes(`${rowIndex}-${colIndex}`)
+                        ? 'special-cell'
+                        : ''
+                    }`}
                     onClick={() => handleClick(colIndex)}></div>
                 ))}
               </div>
@@ -338,7 +342,6 @@ export default function Board({
       <button onClick={initializeBoard} className="restart-btn">
         Reiniciar Jogo
       </button>
-      
     </div>
   );
 }

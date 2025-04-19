@@ -61,6 +61,8 @@ export default function Welcome() {
         <span className="instructions-text">🔴 Cada jogador joga alternadamente.</span>
         <span className="instructions-text">🟡 O objetivo é alinhar 4 peças na horizontal, vertical ou diagonal.</span>
         <span className="instructions-text">🎯 Clique na coluna para soltar a peça. O primeiro a alinhar 4 vence!</span>
+        <span className="instructions-text">🟢 O jogador que não jogar na sua vez, perde a vez.</span>
+        <span className="instructions-text">🟣 Caso o jogador ganhe a jogada bónus, o mesmo pode jogar novamente</span>
       </div>
     </div>
   );
