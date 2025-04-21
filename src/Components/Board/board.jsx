@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from "react";
 
 export default function Board({
   mode,
@@ -23,23 +23,29 @@ export default function Board({
 
   const [specialCells, setSpecialCells] = useState([]);
   const [revealedSpecials, setRevealedSpecials] = useState([]);
+  const [hoveredCol, setHoveredCol] = useState(3);
+  const boardRef = useRef(null);
+  const CELL_SIZE = 80;
 
-  document.querySelector('.title-welcome').innerText = 'Boa sorte Jogadores!';
+
+  console.log(hoveredCol);
+
+  document.querySelector(".title-welcome").innerText = "Boa sorte Jogadores!";
 
   const getPieceClass = (cell) => {
     switch (cell) {
-      case 'R':
-        return 'red-piece';
-      case 'Y':
-        return 'yellow-piece';
-      case 'G':
-        return 'green-piece';
-      case 'P':
-        return 'purple-piece';
-      case 'RGB':
-        return 'rainbow-piece';
+      case "R":
+        return "red-piece";
+      case "Y":
+        return "yellow-piece";
+      case "G":
+        return "green-piece";
+      case "P":
+        return "purple-piece";
+      case "RGB":
+        return "rainbow-piece";
       default:
-        return '';
+        return "";
     }
   };
 
@@ -49,8 +55,8 @@ export default function Board({
     if (timer === 0) {
       setIsTimerActive(false);
 
-      let skippedName = '';
-      if (mode === '1vsPC') {
+      let skippedName = "";
+      if (mode === "1vsPC") {
         skippedName = player3Name;
       } else {
         if (currentPlayer === player1Piece) skippedName = player1Name;
@@ -61,11 +67,11 @@ export default function Board({
       setSkippedPlayer({ name: skippedName, piece: currentPlayer });
 
       setTimeout(() => {
-        if (mode === '1vs1') {
+        if (mode === "1vs1") {
           setCurrentPlayer(
             currentPlayer === player1Piece ? player2Piece : player1Piece
           );
-        } else if (mode === '1vsPC') {
+        } else if (mode === "1vsPC") {
           setCurrentPlayer(
             currentPlayer === player3Piece ? player2Piece : player3Piece
           );
@@ -99,7 +105,7 @@ export default function Board({
   }, []);
 
   useEffect(() => {
-    if (mode === '1vsPC' && currentPlayer === player2Piece && !gameover) {
+    if (mode === "1vsPC" && currentPlayer === player2Piece && !gameover) {
       setIsTimerActive(false);
 
       const timeout = setTimeout(() => {
@@ -130,9 +136,9 @@ export default function Board({
     setBoard(newBoard);
 
     let initialPlayer;
-    if (mode === '1vs1') {
+    if (mode === "1vs1") {
       initialPlayer = Math.random() < 0.5 ? player1Piece : player2Piece;
-    } else if (mode === '1vsPC') {
+    } else if (mode === "1vsPC") {
       initialPlayer = Math.random() < 0.5 ? player3Piece : player2Piece; // humano ou PC
     } else {
       const options = [player1Piece, player2Piece, player3Piece];
@@ -153,7 +159,7 @@ export default function Board({
   const handleClick = (colIndex) => {
     if (gameover) return;
 
-    if (mode === '1vsPC' && currentPlayer !== player3Piece) return;
+    if (mode === "1vsPC" && currentPlayer !== player3Piece) return;
 
     makeMove(colIndex, currentPlayer);
   };
@@ -190,14 +196,14 @@ export default function Board({
           setWinner(piece);
         } else if (isBoardFull(newBoard)) {
           setGameover(true);
-          setWinner('draw');
+          setWinner("draw");
         } else {
           if (!playedSpecial) {
-            if (mode === '1vs1') {
+            if (mode === "1vs1") {
               setCurrentPlayer(
                 piece === player1Piece ? player2Piece : player1Piece
               );
-            } else if (mode === '1vsPC') {
+            } else if (mode === "1vsPC") {
               setCurrentPlayer(
                 piece === player3Piece ? player2Piece : player3Piece
               );
@@ -260,31 +266,39 @@ export default function Board({
   };
 
   const getCurrentPlayerName = () => {
-    if (mode === '1vsPC') {
+    if (mode === "1vsPC") {
       if (currentPlayer === player3Piece) return player3Name; // humano
-      if (currentPlayer === player2Piece) return 'Computador'; // PC
+      if (currentPlayer === player2Piece) return "Computador"; // PC
     } else {
       if (currentPlayer === player1Piece) return player1Name;
       if (currentPlayer === player2Piece) return player2Name;
       if (currentPlayer === player3Piece) return player3Name;
     }
-    return '';
+    return "";
   };
 
   const isBoardFull = (board) => {
     return board[0].every((cell) => cell !== null);
   };
 
+  const handleMouseEnter = (colIndex) => {
+    setHoveredCol(colIndex);
+  };
+
+  const handleMouseLeave = () => {
+    setHoveredCol(null);
+  };
+
   return (
     <div className="game-board">
       {gameover && (
         <div className="winner-message">
-          {winner === 'draw'
-            ? 'Empate!'
-            : mode === '1vsPC'
+          {winner === "draw"
+            ? "Empate!"
+            : mode === "1vsPC"
             ? winner === player3Piece
               ? `${player3Name} venceu!`
-              : 'Computador venceu!'
+              : "Computador venceu!"
             : winner === player1Piece
             ? `${player1Name} venceu!`
             : winner === player2Piece
@@ -306,20 +320,34 @@ export default function Board({
               <div
                 className={`skipped-inline ${getPieceClass(
                   skippedPlayer.piece
-                )}`}>
+                )}`}
+              >
                 {skippedPlayer.name} perdeu o turno!
               </div>
             )}
 
-            <div className={`timer ${timer <= 4 ? 'timer-warning' : ''}`}>
+            <div className={`timer ${timer <= 4 ? "timer-warning" : ""}`}>
               <img className="img-timer" src="./timer.png" alt="timer" />
               {timer} s
             </div>
           </div>
         </div>
 
+        <div className="top-piece-row">
+          <div className="top-piece-row">
+            <div
+              className="floating-piece-container"
+              style={{ left: `${hoveredCol * CELL_SIZE + 15}px` }} // +15px = padding do tabuleiro
+            >
+              <div
+                className={`floating-piece ${getPieceClass(currentPlayer)}`}
+              />
+            </div>
+          </div>
+        </div>
+
         <div className="board-wrapper">
-          <div id="board">
+          <div id="board" ref={boardRef}>
             {board.map((row, rowIndex) => (
               <div key={rowIndex} className="row">
                 {row.map((cell, colIndex) => (
@@ -328,10 +356,13 @@ export default function Board({
                     className={`cell ${getPieceClass(cell)} ${
                       specialCells.includes(`${rowIndex}-${colIndex}`) &&
                       revealedSpecials.includes(`${rowIndex}-${colIndex}`)
-                        ? 'special-cell'
-                        : ''
+                        ? "special-cell"
+                        : ""
                     }`}
-                    onClick={() => handleClick(colIndex)}></div>
+                    onClick={() => handleClick(colIndex)}
+                    onMouseEnter={() => handleMouseEnter(colIndex)}
+                    onMouseLeave={handleMouseLeave}
+                  ></div>
                 ))}
               </div>
             ))}

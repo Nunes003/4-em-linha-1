@@ -1,0 +1,44 @@
+.top-piece-row {
+    width: 100%;
+    position: relative;
+    height: 80px; /* altura da célula */
+    margin-bottom: 5px;
+  }
+  
+  
+  .floating-piece-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 70px; /* Altura da célula */
+    width: 70px;
+    pointer-events: none; /* Permite passar o mouse através dela */
+    transition: left 0.2s ease;
+    z-index: 10;
+  }
+  
+  .floating-piece {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background-color: red; /* Exemplo, pode variar com getPieceClass */
+    box-shadow: 0 0 10px rgba(0,0,0,0.3);
+  }
+  
+  
+  .red-piece {
+    background-color: red;
+  }
+  .yellow-piece {
+    background-color: yellow;
+  }
+  .green-piece {
+    background-color: green;
+  }
+  .purple-piece {
+    background-color: purple;
+  }
+  .rainbow-piece {
+    background: linear-gradient(45deg, red, orange, yellow, green, blue, indigo, violet);
+  }
+  
