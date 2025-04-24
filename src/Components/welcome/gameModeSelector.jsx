@@ -1,4 +1,4 @@
-import PieceSelector from './PieceSelector';
+import PieceSelector from './pieceSelector';
 
 export default function GameModeSelector({
   selectedMode,
