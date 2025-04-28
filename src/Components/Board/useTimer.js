@@ -15,7 +15,7 @@ export default function useTimer(isActive, onTimeout, interval = 1000) {
     }, interval);
 
     return () => clearInterval(countdown);
-  }, [isActive, timer, onTimeout, interval]); // <- adicionado aqui
+  }, [isActive, timer, onTimeout, interval]);
 
   const reset = () => setTimer(10);
 

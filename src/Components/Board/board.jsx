@@ -29,6 +29,12 @@ export default function Board({
   const [hoveredCol, setHoveredCol] = useState(0);
   const boardRef = useRef(null);
 
+  // Sistema de pontuação
+
+  const [player1Score, setPlayer1Score] = useState(0);
+  const [player2Score, setPlayer2Score] = useState(0);
+  const [player3Score, setPlayer3Score] = useState(0);
+
   const [timer, resetTimer] = useTimer(isTimerActive, () => handleTimeout());
 
   useEffect(() => {
@@ -82,6 +88,9 @@ export default function Board({
     resetTimer();
     setIsTimerActive(true);
     setSkippedPlayer(null);
+    setPlayer1Score(0);
+    setPlayer2Score(0);
+    setPlayer3Score(0);
   };
 
   const handleTimeout = () => {
@@ -146,6 +155,10 @@ export default function Board({
 
         if (playedSpecial && !revealedSpecials.includes(cellKey)) {
           setRevealedSpecials((prev) => [...prev, cellKey]);
+
+          if (piece === player1Piece) setPlayer1Score((prev) => prev + 1);
+          else if (piece === player2Piece) setPlayer2Score((prev) => prev + 1);
+          else if (piece === player3Piece) setPlayer3Score((prev) => prev + 1);
         }
 
         if (checkWinner(newBoard, row, colIndex, piece)) {
@@ -191,6 +204,7 @@ export default function Board({
     }
   };
 
+  
   const getCurrentPlayerName = () => {
     if (mode === "1vsPC") {
       if (currentPlayer === player3Piece) return player3Name;
@@ -202,6 +216,7 @@ export default function Board({
     }
     return "";
   };
+
 
   const handleMouseEnter = (colIndex) => setHoveredCol(colIndex);
   const handleMouseLeave = () => setHoveredCol(null);
@@ -225,14 +240,25 @@ export default function Board({
       )}
 
       <div className="board-container">
+
+        {/* Cabeçalho do tabuleiro com informações do jogador atual e temporizador */}
         <BoardHeader
+          mode={mode}
           currentPlayer={currentPlayer}
           getPieceClass={getPieceClass}
           getCurrentPlayerName={getCurrentPlayerName}
           timer={timer}
+          player1Name = {player1Name}
+          player2Name = {player2Name}
+          player3Name = {player3Name}
+          
           skippedPlayer={skippedPlayer}
+          player1Score={player1Score}
+          player2Score={player2Score}
+          player3Score={player3Score}
         />
 
+        {/* Peça que desliza sobre o tabuleiro */}
         <FloatingPiece
           hoveredCol={hoveredCol}
           currentPlayer={currentPlayer}
@@ -240,6 +266,7 @@ export default function Board({
           CELL_SIZE={CELL_SIZE}
         />
 
+        {/* Tabuleiro */}
         <div className="board-wrapper">
           <div id="board" ref={boardRef}>
             {board.map((row, rowIndex) => (
