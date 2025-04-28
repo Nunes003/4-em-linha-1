@@ -1,6 +1,24 @@
 export default function PieceSelector({ label, value, onChange, name, onNameChange }) {
 
   const pieces = ['R', 'Y', 'G', 'P', 'RGB'];
+
+  function getPieceClass(value) {
+    switch (value) {
+      case 'R':
+        return 'red-piece';
+      case 'Y':
+        return 'yellow-piece';
+      case 'G':
+        return 'green-piece';
+      case 'P':
+        return 'purple-piece';
+      case 'RGB':
+        return 'rainbow-piece';
+      default:
+        return '';
+    }
+  }
+  
   return (
     <div className="piece-selector">
       <span>{label}</span>
@@ -30,19 +48,4 @@ export default function PieceSelector({ label, value, onChange, name, onNameChan
   );
 }
 
-function getPieceClass(value) {
-  switch (value) {
-    case 'R':
-      return 'red-piece';
-    case 'Y':
-      return 'yellow-piece';
-    case 'G':
-      return 'green-piece';
-    case 'P':
-      return 'purple-piece';
-    case 'RGB':
-      return 'rainbow-piece';
-    default:
-      return '';
-  }
-}
+
