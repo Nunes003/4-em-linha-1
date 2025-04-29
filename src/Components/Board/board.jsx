@@ -14,45 +14,42 @@ export default function Board({
   player2Piece,
   player3Piece,
 }) {
-  // Definindo o tamanho do tabuleiro e o tamanho da célula
+
+  // Constantes
   const rows = 6;
   const columns = 7;
   const CELL_SIZE = 80;
 
+  // Estados do jogo
   const [board, setBoard] = useState([]);
-
   const [currentPlayer, setCurrentPlayer] = useState(player1Piece);
   const [gameover, setGameover] = useState(false);
   const [winner, setWinner] = useState(null);
+  const [fallingPiece, setFallingPiece] = useState(null);
 
-  const [isTimerActive, setIsTimerActive] = useState(true);
-  const [skippedPlayer, setSkippedPlayer] = useState(null);
-
-  // Celulas especiais
-  const [specialCells, setSpecialCells] = useState([]);
-  const [revealedSpecials, setRevealedSpecials] = useState([]);
-
-  // Definir a posição da peça floatante
-  const [hoveredCol, setHoveredCol] = useState([]);
-  const boardRef = useRef(null);
-
-  // Sistema de pontuação
-
+  // Jogadores e placar
   const [player1Score, setPlayer1Score] = useState(0);
   const [player2Score, setPlayer2Score] = useState(0);
   const [player3Score, setPlayer3Score] = useState(0);
 
+  // Células especiais
+  const [specialCells, setSpecialCells] = useState([]);
+  const [revealedSpecials, setRevealedSpecials] = useState([]);
+
   // Temporizador
+  const [isTimerActive, setIsTimerActive] = useState(true);
   const [timer, resetTimer] = useTimer(isTimerActive, () => handleTimeout());
+  const [skippedPlayer, setSkippedPlayer] = useState(null);
 
-  const [fallingPiece, setFallingPiece] = useState(null);
+  // Interação visual
+  const [hoveredCol, setHoveredCol] = useState([]);
+  const boardRef = useRef(null);
 
+  // Efeitos colaterais
   useEffect(() => {
     initializeBoard();
     document.querySelector('.title-welcome').innerText = 'Boa sorte Jogadores!';
   }, []);
-
-  // Jogada do computador no modo "1vsPC" , tem delay de 2 segundos para ele jogar
 
   useEffect(() => {
     if (
@@ -71,17 +68,7 @@ export default function Board({
     }
   }, [currentPlayer, board, gameover]);
 
-  const generateSpecialCells = () => {
-    const special = new Set();
-    while (special.size < 5) {
-      const row = Math.floor(Math.random() * rows);
-      const col = Math.floor(Math.random() * columns);
-      special.add(`${row}-${col}`);
-    }
-    return Array.from(special);
-  };
-
-  // Inicialização do tabuleiro em que faz um Random entre os jogadores para definir quem começa jogando de 50% para saber qual o jogador que começa
+  // Inicialização do tabuleiro
   const initializeBoard = () => {
     const newBoard = Array(rows)
       .fill(null)
@@ -97,8 +84,8 @@ export default function Board({
       const options = [player1Piece, player2Piece, player3Piece];
       initialPlayer = options[Math.floor(Math.random() * options.length)];
     }
-    setCurrentPlayer(initialPlayer);
 
+    setCurrentPlayer(initialPlayer);
     setSpecialCells(generateSpecialCells());
     setRevealedSpecials([]);
     setGameover(false);
@@ -111,6 +98,18 @@ export default function Board({
     setPlayer3Score(0);
   };
 
+  // Células especiais
+  const generateSpecialCells = () => {
+    const special = new Set();
+    while (special.size < 5) {
+      const row = Math.floor(Math.random() * rows);
+      const col = Math.floor(Math.random() * columns);
+      special.add(`${row}-${col}`);
+    }
+    return Array.from(special);
+  };
+
+  // Timeout do jogador
   const handleTimeout = () => {
     if (gameover) return;
     setIsTimerActive(false);
@@ -119,9 +118,12 @@ export default function Board({
     if (mode === '1vsPC') {
       skippedName = player3Name;
     } else {
-      if (currentPlayer === player1Piece) skippedName = player1Name;
-      else if (currentPlayer === player2Piece) skippedName = player2Name;
-      else skippedName = player3Name;
+      skippedName =
+        currentPlayer === player1Piece
+          ? player1Name
+          : currentPlayer === player2Piece
+          ? player2Name
+          : player3Name;
     }
 
     setSkippedPlayer({ name: skippedName, piece: currentPlayer });
@@ -144,29 +146,52 @@ export default function Board({
             : player1Piece
         );
       }
+
       resetTimer();
       setIsTimerActive(true);
       setSkippedPlayer(null);
     }, 2000);
   };
 
-  // Função para lidar com o clique na célula do tabuleiro
-  const handleClick = (colIndex) => {
-    if (gameover) return;
-    if (mode === '1vsPC' && currentPlayer !== player3Piece) return;
-    makeMove(colIndex, currentPlayer);
-  };
-
+  // Jogada do computador
   const playPCMove = () => {
     const validCols = board[0]
       .map((cell, colIndex) => (cell === null ? colIndex : null))
       .filter((col) => col !== null);
 
     if (validCols.length === 0) return;
+
     const randomCol = validCols[Math.floor(Math.random() * validCols.length)];
     makeMove(randomCol, player2Piece);
   };
 
+  // Clique na célula
+  const handleClick = (colIndex) => {
+    if (gameover) return;
+    if (mode === '1vsPC' && currentPlayer !== player3Piece) return;
+    makeMove(colIndex, currentPlayer);
+  };
+
+  // Realizar jogada
+  const makeMove = (colIndex, piece) => {
+    if (fallingPiece) return;
+
+    const newBoard = board.map((row) => [...row]);
+    let targetRow = -1;
+
+    for (let row = rows - 1; row >= 0; row--) {
+      if (!newBoard[row][colIndex]) {
+        targetRow = row;
+        break;
+      }
+    }
+
+    if (targetRow === -1) return;
+
+    animatePieceFall(colIndex, targetRow, piece, newBoard);
+  };
+
+  // Animação da peça
   const animatePieceFall = (colIndex, targetRow, piece, newBoard) => {
     let currentRow = 0;
 
@@ -191,25 +216,23 @@ export default function Board({
         } else if (isBoardFull(newBoard)) {
           setGameover(true);
           setWinner('draw');
-        } else {
-          if (!playedSpecial) {
-            if (mode === '1vs1') {
-              setCurrentPlayer(
-                piece === player1Piece ? player2Piece : player1Piece
-              );
-            } else if (mode === '1vsPC') {
-              setCurrentPlayer(
-                piece === player3Piece ? player2Piece : player3Piece
-              );
-            } else {
-              setCurrentPlayer(
-                piece === player1Piece
-                  ? player3Piece
-                  : piece === player3Piece
-                  ? player2Piece
-                  : player1Piece
-              );
-            }
+        } else if (!playedSpecial) {
+          if (mode === '1vs1') {
+            setCurrentPlayer(
+              piece === player1Piece ? player2Piece : player1Piece
+            );
+          } else if (mode === '1vsPC') {
+            setCurrentPlayer(
+              piece === player3Piece ? player2Piece : player3Piece
+            );
+          } else {
+            setCurrentPlayer(
+              piece === player1Piece
+                ? player3Piece
+                : piece === player3Piece
+                ? player2Piece
+                : player1Piece
+            );
           }
         }
 
@@ -225,24 +248,7 @@ export default function Board({
     }, 80);
   };
 
-  const makeMove = (colIndex, piece) => {
-    if (fallingPiece) return; // evita cliques enquanto anima
-
-    const newBoard = board.map((row) => [...row]);
-
-    let targetRow = -1;
-    for (let row = rows - 1; row >= 0; row--) {
-      if (!newBoard[row][colIndex]) {
-        targetRow = row;
-        break;
-      }
-    }
-
-    if (targetRow === -1) return; // coluna cheia
-
-    animatePieceFall(colIndex, targetRow, piece, newBoard);
-  };
-
+  // Utilidades
   const getScoreSetterByPiece = (piece) => {
     if (mode === '1vsPC') {
       if (piece === player3Piece) return setPlayer3Score;
@@ -274,16 +280,16 @@ export default function Board({
 
   const getCurrentPlayerName = () => {
     if (mode === '1vsPC') {
-      if (currentPlayer === player3Piece) return player3Name;
-      if (currentPlayer === player2Piece) return 'Computador';
-    } else {
-      if (currentPlayer === player1Piece) return player1Name;
-      if (currentPlayer === player2Piece) return player2Name;
-      if (currentPlayer === player3Piece) return player3Name;
+      return currentPlayer === player3Piece ? player3Name : 'Computador';
     }
-    return '';
+    return currentPlayer === player1Piece
+      ? player1Name
+      : currentPlayer === player2Piece
+      ? player2Name
+      : player3Name;
   };
 
+  // Hover visual
   const handleMouseEnter = (colIndex) => setHoveredCol(colIndex);
   const handleMouseLeave = () => setHoveredCol(null);
 
@@ -339,8 +345,8 @@ export default function Board({
                   position: 'absolute',
                   top: `${fallingPiece.row * CELL_SIZE}px`,
                   left: `${fallingPiece.col * CELL_SIZE + 15}px`,
-                  width: "70px",
-                  height: "70px",
+                  width: '70px',
+                  height: '70px',
                   transition: 'top 0.08s linear',
                   zIndex: 10,
                 }}
