@@ -1,9 +1,9 @@
-import { useState, useEffect, useRef } from "react";
-import BoardHeader from "./boardHeader";
-import FloatingPiece from "./floatingPiece";
-import GameCell from "./gameCell";
-import { checkWinner, isBoardFull } from "./gameLogic";
-import useTimer from "./useTimer";
+import { useState, useEffect, useRef } from 'react';
+import BoardHeader from './boardHeader';
+import FloatingPiece from './floatingPiece';
+import GameCell from './gameCell';
+import { checkWinner, isBoardFull } from './gameLogic';
+import useTimer from './useTimer';
 
 export default function Board({
   mode,
@@ -14,7 +14,6 @@ export default function Board({
   player2Piece,
   player3Piece,
 }) {
-
   // Definindo o tamanho do tabuleiro e o tamanho da célula
   const rows = 6;
   const columns = 7;
@@ -46,15 +45,22 @@ export default function Board({
   // Temporizador
   const [timer, resetTimer] = useTimer(isTimerActive, () => handleTimeout());
 
+  const [fallingPiece, setFallingPiece] = useState(null);
+
   useEffect(() => {
     initializeBoard();
-    document.querySelector(".title-welcome").innerText = "Boa sorte Jogadores!";
+    document.querySelector('.title-welcome').innerText = 'Boa sorte Jogadores!';
   }, []);
 
   // Jogada do computador no modo "1vsPC" , tem delay de 2 segundos para ele jogar
 
   useEffect(() => {
-    if (mode === "1vsPC" && currentPlayer === player2Piece && !gameover && board.some(row => row.includes(null))) {
+    if (
+      mode === '1vsPC' &&
+      currentPlayer === player2Piece &&
+      !gameover &&
+      board.some((row) => row.includes(null))
+    ) {
       setIsTimerActive(false);
       const timeout = setTimeout(() => {
         playPCMove();
@@ -83,9 +89,9 @@ export default function Board({
     setBoard(newBoard);
 
     let initialPlayer;
-    if (mode === "1vs1") {
+    if (mode === '1vs1') {
       initialPlayer = Math.random() < 0.5 ? player1Piece : player2Piece;
-    } else if (mode === "1vsPC") {
+    } else if (mode === '1vsPC') {
       initialPlayer = Math.random() < 0.5 ? player3Piece : player2Piece;
     } else {
       const options = [player1Piece, player2Piece, player3Piece];
@@ -109,8 +115,8 @@ export default function Board({
     if (gameover) return;
     setIsTimerActive(false);
 
-    let skippedName = "";
-    if (mode === "1vsPC") {
+    let skippedName = '';
+    if (mode === '1vsPC') {
       skippedName = player3Name;
     } else {
       if (currentPlayer === player1Piece) skippedName = player1Name;
@@ -121,10 +127,14 @@ export default function Board({
     setSkippedPlayer({ name: skippedName, piece: currentPlayer });
 
     setTimeout(() => {
-      if (mode === "1vs1") {
-        setCurrentPlayer(currentPlayer === player1Piece ? player2Piece : player1Piece);
-      } else if (mode === "1vsPC") {
-        setCurrentPlayer(currentPlayer === player3Piece ? player2Piece : player3Piece);
+      if (mode === '1vs1') {
+        setCurrentPlayer(
+          currentPlayer === player1Piece ? player2Piece : player1Piece
+        );
+      } else if (mode === '1vsPC') {
+        setCurrentPlayer(
+          currentPlayer === player3Piece ? player2Piece : player3Piece
+        );
       } else {
         setCurrentPlayer(
           currentPlayer === player1Piece
@@ -143,7 +153,7 @@ export default function Board({
   // Função para lidar com o clique na célula do tabuleiro
   const handleClick = (colIndex) => {
     if (gameover) return;
-    if (mode === "1vsPC" && currentPlayer !== player3Piece) return;
+    if (mode === '1vsPC' && currentPlayer !== player3Piece) return;
     makeMove(colIndex, currentPlayer);
   };
 
@@ -157,36 +167,40 @@ export default function Board({
     makeMove(randomCol, player2Piece);
   };
 
-  const makeMove = (colIndex, piece) => {
-    const newBoard = board.map((row) => [...row]);
-    for (let row = rows - 1; row >= 0; row--) {
-      if (!newBoard[row][colIndex]) {
-        newBoard[row][colIndex] = piece;
+  const animatePieceFall = (colIndex, targetRow, piece, newBoard) => {
+    let currentRow = 0;
 
-        const cellKey = `${row}-${colIndex}`;
+    const interval = setInterval(() => {
+      if (currentRow > targetRow) {
+        clearInterval(interval);
+
+        newBoard[targetRow][colIndex] = piece;
+
+        const cellKey = `${targetRow}-${colIndex}`;
         const playedSpecial = specialCells.includes(cellKey);
 
         if (playedSpecial && !revealedSpecials.includes(cellKey)) {
           setRevealedSpecials((prev) => [...prev, cellKey]);
-
           const scoreSetter = getScoreSetterByPiece(piece);
           if (scoreSetter) scoreSetter((prev) => prev + 1);
-          
-          
         }
 
-        if (checkWinner(newBoard, row, colIndex, piece)) {
+        if (checkWinner(newBoard, targetRow, colIndex, piece)) {
           setGameover(true);
           setWinner(piece);
         } else if (isBoardFull(newBoard)) {
           setGameover(true);
-          setWinner("draw");
+          setWinner('draw');
         } else {
           if (!playedSpecial) {
-            if (mode === "1vs1") {
-              setCurrentPlayer(piece === player1Piece ? player2Piece : player1Piece);
-            } else if (mode === "1vsPC") {
-              setCurrentPlayer(piece === player3Piece ? player2Piece : player3Piece);
+            if (mode === '1vs1') {
+              setCurrentPlayer(
+                piece === player1Piece ? player2Piece : player1Piece
+              );
+            } else if (mode === '1vsPC') {
+              setCurrentPlayer(
+                piece === player3Piece ? player2Piece : player3Piece
+              );
             } else {
               setCurrentPlayer(
                 piece === player1Piece
@@ -199,16 +213,38 @@ export default function Board({
           }
         }
 
+        setBoard(newBoard);
+        setFallingPiece(null);
         resetTimer();
         setIsTimerActive(true);
-        setBoard(newBoard);
         return;
       }
+
+      setFallingPiece({ col: colIndex, row: currentRow, piece });
+      currentRow++;
+    }, 80);
+  };
+
+  const makeMove = (colIndex, piece) => {
+    if (fallingPiece) return; // evita cliques enquanto anima
+
+    const newBoard = board.map((row) => [...row]);
+
+    let targetRow = -1;
+    for (let row = rows - 1; row >= 0; row--) {
+      if (!newBoard[row][colIndex]) {
+        targetRow = row;
+        break;
+      }
     }
+
+    if (targetRow === -1) return; // coluna cheia
+
+    animatePieceFall(colIndex, targetRow, piece, newBoard);
   };
 
   const getScoreSetterByPiece = (piece) => {
-    if (mode === "1vsPC") {
+    if (mode === '1vsPC') {
       if (piece === player3Piece) return setPlayer3Score;
       if (piece === player2Piece) return setPlayer2Score;
     } else {
@@ -218,32 +254,35 @@ export default function Board({
     }
     return null;
   };
-  
 
   const getPieceClass = (cell) => {
     switch (cell) {
-      case "R": return "red-piece";
-      case "Y": return "yellow-piece";
-      case "G": return "green-piece";
-      case "P": return "purple-piece";
-      case "RGB": return "rainbow-piece";
-      default: return "";
+      case 'R':
+        return 'red-piece';
+      case 'Y':
+        return 'yellow-piece';
+      case 'G':
+        return 'green-piece';
+      case 'P':
+        return 'purple-piece';
+      case 'RGB':
+        return 'rainbow-piece';
+      default:
+        return '';
     }
   };
 
-  
   const getCurrentPlayerName = () => {
-    if (mode === "1vsPC") {
+    if (mode === '1vsPC') {
       if (currentPlayer === player3Piece) return player3Name;
-      if (currentPlayer === player2Piece) return "Computador";
+      if (currentPlayer === player2Piece) return 'Computador';
     } else {
       if (currentPlayer === player1Piece) return player1Name;
       if (currentPlayer === player2Piece) return player2Name;
       if (currentPlayer === player3Piece) return player3Name;
     }
-    return "";
+    return '';
   };
-
 
   const handleMouseEnter = (colIndex) => setHoveredCol(colIndex);
   const handleMouseLeave = () => setHoveredCol(null);
@@ -252,12 +291,12 @@ export default function Board({
     <div className="game-board">
       {gameover && (
         <div className="winner-message">
-          {winner === "draw"
-            ? "Empate!"
-            : mode === "1vsPC"
+          {winner === 'draw'
+            ? 'Empate!'
+            : mode === '1vsPC'
             ? winner === player3Piece
               ? `${player3Name} venceu!`
-              : "Computador venceu!"
+              : 'Computador venceu!'
             : winner === player1Piece
             ? `${player1Name} venceu!`
             : winner === player2Piece
@@ -267,27 +306,21 @@ export default function Board({
       )}
 
       <div className="board-container">
-
-        {/* Cabeçalho do tabuleiro com informações do jogador atual e temporizador */}
         <BoardHeader
           mode={mode}
           currentPlayer={currentPlayer}
           getPieceClass={getPieceClass}
           getCurrentPlayerName={getCurrentPlayerName}
           timer={timer}
-          
           skippedPlayer={skippedPlayer}
-
-          player1Name = {player1Name}
-          player2Name = {player2Name}
-          player3Name = {player3Name}
-
+          player1Name={player1Name}
+          player2Name={player2Name}
+          player3Name={player3Name}
           player1Score={player1Score}
           player2Score={player2Score}
           player3Score={player3Score}
         />
 
-        {/* Peça que desliza sobre o tabuleiro */}
         <FloatingPiece
           hoveredCol={hoveredCol}
           currentPlayer={currentPlayer}
@@ -295,9 +328,25 @@ export default function Board({
           CELL_SIZE={CELL_SIZE}
         />
 
-        {/* Tabuleiro */}
         <div className="board-wrapper">
           <div id="board" ref={boardRef}>
+            {fallingPiece && (
+              <div
+                className={`animated-piece ${getPieceClass(
+                  fallingPiece.piece
+                )}`}
+                style={{
+                  position: 'absolute',
+                  top: `${fallingPiece.row * CELL_SIZE}px`,
+                  left: `${fallingPiece.col * CELL_SIZE + 15}px`,
+                  width: "70px",
+                  height: "70px",
+                  transition: 'top 0.08s linear',
+                  zIndex: 10,
+                }}
+              />
+            )}
+
             {board.map((row, rowIndex) => (
               <div key={rowIndex} className="row">
                 {row.map((cell, colIndex) => (
@@ -310,7 +359,9 @@ export default function Board({
                     onMouseEnter={handleMouseEnter}
                     onMouseLeave={handleMouseLeave}
                     isSpecial={specialCells.includes(`${rowIndex}-${colIndex}`)}
-                    isRevealed={revealedSpecials.includes(`${rowIndex}-${colIndex}`)}
+                    isRevealed={revealedSpecials.includes(
+                      `${rowIndex}-${colIndex}`
+                    )}
                     getPieceClass={getPieceClass}
                   />
                 ))}
@@ -320,7 +371,9 @@ export default function Board({
         </div>
       </div>
 
-      <button onClick={initializeBoard} className="restart-btn">Reiniciar Jogo</button>
+      <button onClick={initializeBoard} className="restart-btn">
+        Reiniciar Jogo
+      </button>
     </div>
   );
 }

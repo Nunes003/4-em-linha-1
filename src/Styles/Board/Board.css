@@ -319,3 +319,29 @@
   display: inline-block;
   margin: 0 10px;
 }
+
+.red-piece {
+  background-color: red;
+}
+
+.yellow-piece {
+  background-color: yellow;
+}
+
+.green-piece {
+  background-color: green;
+}
+
+.purple-piece {
+  background-color: purple;
+}
+
+.rainbow-piece {
+  background: linear-gradient(45deg, red, yellow, green, blue, purple);
+}
+
+.animated-piece {
+  border-radius: 50%;
+  position: absolute;
+  pointer-events: none;
+}
