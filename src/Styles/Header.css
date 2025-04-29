@@ -18,10 +18,11 @@
   margin: 10px 0;
 }
 
-.return-btn {
+.return-btn,
+.top10-btn {
   display: flex;
   align-items: center;
-  background-color: #fca311;
+
   color: #fff;
   border: none;
   padding: 10px 16px;
@@ -30,10 +31,9 @@
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
 }
 
-.return-btn{
+.return-btn {
   display: none;
 }
-

@@ -130,7 +130,8 @@
 
 /* Botão de reiniciar estilizado */
 .restart-btn,
-.return-btn {
+.return-btn,
+.top10-btn {
   padding: 12px 30px;
   background: linear-gradient(to right, #00c6ff, #0072ff);
   color: white;
@@ -299,3 +300,22 @@
   }
 }
 
+/* Estilo para a seção de pontuação dos jogadores */
+.player-scores {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.1);
+  padding: 10px 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  font-size: 18px;
+  font-weight: bold;
+  color: #ffffff;
+  margin-bottom: 15px;
+}
+
+.player-scores span {
+  display: inline-block;
+  margin: 0 10px;
+}

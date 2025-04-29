@@ -4,7 +4,7 @@ import GameModeSelector from './gameModeSelector';
 import Board from '../Board/board';
 
 export default function Welcome() {
-  const [selectedMode, setSelectedMode] = useState(''); // "" | "1vs1" | "1vsPC"
+  const [selectedMode, setSelectedMode] = useState('');
   const [player1Piece, setPlayer1Piece] = useState('R');
   const [player2Piece, setPlayer2Piece] = useState('Y');
   const [player3Piece, setPlayer3Piece] = useState('R');
@@ -14,7 +14,7 @@ export default function Welcome() {
   const [showInstructions, setShowInstructions] = useState(false);
   const [popupMessage, setPopupMessage] = useState('');
   const [showPopup, setShowPopup] = useState(false);
-  const [gameStarted, setGameStarted] = useState(false); // para apresentar o tabuleiro
+  const [gameStarted, setGameStarted] = useState(false);
 
   const validatePlayers = () => {
     console.log('Modo de Jogo Selecionado:', selectedMode);
@@ -51,6 +51,8 @@ export default function Welcome() {
 
     setGameStarted(true);
     document.querySelector('.return-btn').style.display = 'block';
+    document.querySelector('.top10-btn').style.display = 'none';
+  
     return true;
   };
 

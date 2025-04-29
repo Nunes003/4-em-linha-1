@@ -14,19 +14,27 @@ export default function Board({
   player2Piece,
   player3Piece,
 }) {
+
+  // Definindo o tamanho do tabuleiro e o tamanho da célula
   const rows = 6;
   const columns = 7;
   const CELL_SIZE = 80;
 
   const [board, setBoard] = useState([]);
+
   const [currentPlayer, setCurrentPlayer] = useState(player1Piece);
   const [gameover, setGameover] = useState(false);
   const [winner, setWinner] = useState(null);
+
   const [isTimerActive, setIsTimerActive] = useState(true);
   const [skippedPlayer, setSkippedPlayer] = useState(null);
+
+  // Celulas especiais
   const [specialCells, setSpecialCells] = useState([]);
   const [revealedSpecials, setRevealedSpecials] = useState([]);
-  const [hoveredCol, setHoveredCol] = useState(0);
+
+  // Definir a posição da peça floatante
+  const [hoveredCol, setHoveredCol] = useState([]);
   const boardRef = useRef(null);
 
   // Sistema de pontuação
@@ -35,6 +43,7 @@ export default function Board({
   const [player2Score, setPlayer2Score] = useState(0);
   const [player3Score, setPlayer3Score] = useState(0);
 
+  // Temporizador
   const [timer, resetTimer] = useTimer(isTimerActive, () => handleTimeout());
 
   useEffect(() => {
@@ -42,8 +51,10 @@ export default function Board({
     document.querySelector(".title-welcome").innerText = "Boa sorte Jogadores!";
   }, []);
 
+  // Jogada do computador no modo "1vsPC" , tem delay de 2 segundos para ele jogar
+
   useEffect(() => {
-    if (mode === "1vsPC" && currentPlayer === player2Piece && !gameover) {
+    if (mode === "1vsPC" && currentPlayer === player2Piece && !gameover && board.some(row => row.includes(null))) {
       setIsTimerActive(false);
       const timeout = setTimeout(() => {
         playPCMove();
@@ -64,6 +75,7 @@ export default function Board({
     return Array.from(special);
   };
 
+  // Inicialização do tabuleiro em que faz um Random entre os jogadores para definir quem começa jogando de 50% para saber qual o jogador que começa
   const initializeBoard = () => {
     const newBoard = Array(rows)
       .fill(null)
@@ -128,6 +140,7 @@ export default function Board({
     }, 2000);
   };
 
+  // Função para lidar com o clique na célula do tabuleiro
   const handleClick = (colIndex) => {
     if (gameover) return;
     if (mode === "1vsPC" && currentPlayer !== player3Piece) return;
@@ -156,9 +169,10 @@ export default function Board({
         if (playedSpecial && !revealedSpecials.includes(cellKey)) {
           setRevealedSpecials((prev) => [...prev, cellKey]);
 
-          if (piece === player1Piece) setPlayer1Score((prev) => prev + 1);
-          else if (piece === player2Piece) setPlayer2Score((prev) => prev + 1);
-          else if (piece === player3Piece) setPlayer3Score((prev) => prev + 1);
+          const scoreSetter = getScoreSetterByPiece(piece);
+          if (scoreSetter) scoreSetter((prev) => prev + 1);
+          
+          
         }
 
         if (checkWinner(newBoard, row, colIndex, piece)) {
@@ -192,6 +206,19 @@ export default function Board({
       }
     }
   };
+
+  const getScoreSetterByPiece = (piece) => {
+    if (mode === "1vsPC") {
+      if (piece === player3Piece) return setPlayer3Score;
+      if (piece === player2Piece) return setPlayer2Score;
+    } else {
+      if (piece === player1Piece) return setPlayer1Score;
+      if (piece === player2Piece) return setPlayer2Score;
+      if (piece === player3Piece) return setPlayer3Score;
+    }
+    return null;
+  };
+  
 
   const getPieceClass = (cell) => {
     switch (cell) {
@@ -248,11 +275,13 @@ export default function Board({
           getPieceClass={getPieceClass}
           getCurrentPlayerName={getCurrentPlayerName}
           timer={timer}
+          
+          skippedPlayer={skippedPlayer}
+
           player1Name = {player1Name}
           player2Name = {player2Name}
           player3Name = {player3Name}
-          
-          skippedPlayer={skippedPlayer}
+
           player1Score={player1Score}
           player2Score={player2Score}
           player3Score={player3Score}
