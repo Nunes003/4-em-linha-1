@@ -4,18 +4,22 @@ import GameModeSelector from './gameModeSelector';
 import Board from '../Board/board';
 
 export default function Welcome() {
+  // Estados relacionados a configuração do jogo
   const [selectedMode, setSelectedMode] = useState('');
-  const [player1Piece, setPlayer1Piece] = useState('R');
-  const [player2Piece, setPlayer2Piece] = useState('Y');
-  const [player3Piece, setPlayer3Piece] = useState('R');
   const [player1Name, setPlayer1Name] = useState('');
   const [player2Name, setPlayer2Name] = useState('');
   const [player3Name, setPlayer3Name] = useState('');
+  const [player1Piece, setPlayer1Piece] = useState('R');
+  const [player2Piece, setPlayer2Piece] = useState('Y');
+  const [player3Piece, setPlayer3Piece] = useState('R');
+
+  // Estados relacionados a UI
   const [showInstructions, setShowInstructions] = useState(false);
   const [popupMessage, setPopupMessage] = useState('');
   const [showPopup, setShowPopup] = useState(false);
   const [gameStarted, setGameStarted] = useState(false);
 
+  // Validação dos dados antes de iniciar o jogo
   const validatePlayers = () => {
     console.log('Modo de Jogo Selecionado:', selectedMode);
 
@@ -26,9 +30,7 @@ export default function Welcome() {
         return false;
       }
 
-      if (
-        player1Name.trim().toLowerCase() === player2Name.trim().toLowerCase()
-      ) {
+      if (player1Name.trim().toLowerCase() === player2Name.trim().toLowerCase()) {
         setPopupMessage('Os nomes dos jogadores não podem ser iguais.');
         setShowPopup(true);
         return false;
@@ -50,25 +52,40 @@ export default function Welcome() {
     }
 
     setGameStarted(true);
+    
     document.querySelector('.return-btn').style.display = 'block';
     document.querySelector('.top10-btn').style.display = 'none';
-  
     return true;
   };
 
+  // Conteúdo das instruções
   const instructionsContent = (
     <div className="instructions-container">
       <span className="instructions-title">Como jogar?</span>
       <div className="instructions-content">
-        <span className="instructions-text">🔴 Cada jogador joga alternadamente.</span>
-        <span className="instructions-text">🟡 O objetivo é alinhar 4 peças na horizontal, vertical ou diagonal.</span>
-        <span className="instructions-text">🎯 Clique na coluna para soltar a peça. O primeiro a alinhar 4 vence!</span>
-        <span className="instructions-text">🟢 O jogador que não jogar na sua vez, perde a vez.</span>
-        <span className="instructions-text">🟣 Caso o jogador ganhe a jogada bónus, o mesmo pode jogar novamente</span>
+        <div className="instruction-row">
+          <span className="instructions-text">🔴</span>
+          <span>Cada jogador joga alternadamente.</span>
+        </div>
+        <div className="instruction-row">
+          <span className="instructions-text">🟡</span>
+          <span>O objetivo é alinhar 4 peças na horizontal, vertical ou diagonal.</span>
+        </div>
+        <div className="instruction-row">
+          <span className="instructions-text">🎯</span>
+          <span>Clique na coluna para soltar a peça. O primeiro a alinhar 4 vence!</span>
+        </div>
+        <div className="instruction-row">
+          <span className="instructions-text">🟢</span>
+          <span>O jogador que não jogar na sua vez, perde a vez.</span>
+        </div>
+        <div className="instruction-row">
+          <span className="instructions-text">🟣</span>
+          <span>Caso o jogador ganhe a jogada bónus, o mesmo pode jogar novamente.</span>
+        </div>
       </div>
     </div>
   );
-  
 
   return (
     <div className="welcome-container">
@@ -123,11 +140,17 @@ export default function Welcome() {
       </button>
 
       {showInstructions && (
-        <Popup message={instructionsContent} onClose={() => setShowInstructions(false)} />
+        <Popup
+          message={instructionsContent}
+          onClose={() => setShowInstructions(false)}
+        />
       )}
 
       {showPopup && (
-        <Popup message={popupMessage} onClose={() => setShowPopup(false)} />
+        <Popup
+          message={popupMessage}
+          onClose={() => setShowPopup(false)}
+        />
       )}
     </div>
   );

@@ -17,6 +17,9 @@ export default function GameModeSelector({
   setPlayer3Name,
   validatePlayers,
 }) {
+
+  
+
   return (
     <>
       <p className="welcome-description">
