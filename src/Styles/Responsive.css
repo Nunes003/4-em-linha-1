@@ -1,0 +1,167 @@
+@media (max-width: 640px) {
+  #board {
+    max-width: 500px !important;
+    width: 100% !important;
+    display: flex;
+    flex-direction: column !important;
+    height: auto !important;
+  }
+}
+
+@media (max-width: 538px) {
+  .game-header {
+    display: flex;
+    gap: 10px;
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 570px) and (min-width: 480px) {
+  #board {
+    width: 400px !important;
+    display: flex;
+    flex-direction: column !important;
+    height: auto !important;
+  }
+
+  .cell {
+    width: 50px !important;
+    height: 50px !important;
+  }
+}
+
+@media (max-width: 479px) and (min-width: 460px) {
+  #board {
+    width: 400px !important;
+    display: flex;
+    flex-direction: column !important;
+    height: auto !important;
+  }
+
+  .cell {
+    width: 50px !important;
+    height: 50px !important;
+  }
+}
+
+@media (max-width: 459px) and (min-width: 440px) {
+  #board {
+    width: 360px !important;
+    display: flex;
+    flex-direction: column !important;
+    height: auto !important;
+  }
+
+  .cell {
+    width: 50px !important;
+    height: 50px !important;
+  }
+}
+
+@media (max-width: 439px) and (min-width: 426px) {
+  #board {
+    width: 330px !important;
+    display: flex;
+    flex-direction: column !important;
+    height: auto !important;
+  }
+
+  .cell {
+    width: 50px !important;
+    height: 50px !important;
+  }
+}
+
+@media (max-width: 425px) {
+  .game-header {
+    display: flex;
+    justify-content: center !important;
+    align-items: center;
+    border-radius: 0 0 16px 16px !important;
+  }
+
+  .button-group {
+    gap: 35px !important;
+  }
+
+  .piece-selector {
+    max-width: 265px !important;
+  }
+
+  .select-game-box {
+    width: auto;
+  }
+
+  .game-header h1 {
+    font-size: 35px !important;
+  }
+
+  .title-welcome {
+    font-size: 31px !important;
+  }
+  .welcome-description {
+    font-size: 16px !important;
+  }
+
+  .game-mode-btn {
+    max-width: 175px;
+    width: 100%;
+  }
+
+  .welcome-container {
+    padding: 30px 20px !important;
+  }
+
+  .piece {
+    width: 30px !important;
+    height: 30px !important;
+  }
+
+  .cell {
+    width: 40px !important;
+    height: 40px !important;
+  }
+}
+
+@media (max-width: 321px) {
+  .piece-selector {
+    padding: 15px 0 !important;
+    margin-bottom: 11px !important;
+  }
+
+  .player-setup input {
+    width: 75% !important;
+  }
+
+  .piece-options {
+    gap: 6px !important;
+  }
+
+  .how-to-play-btn {
+    margin-bottom: 35px !important;
+  }
+
+  .select-piece {
+    width: 100% !important;
+  }
+
+  .piece-options {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    margin-top: 0.5rem;
+    justify-content: center;
+  }
+
+  #board {
+    width: 250px !important;
+    display: flex;
+    flex-direction: column !important;
+    height: auto !important;
+  }
+
+  .cell {
+    width: 40px !important;
+    height: 40px !important;
+  }
+}

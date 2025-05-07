@@ -2,6 +2,7 @@ import Layout from './Components/Layout/layout';
 import Welcome from './Components/welcome/welcome';
 
 import './Styles/App.css';
+import './Styles/Responsive.css';
 import './Styles/Board/Board.css';
 import './Styles/Layout/Header.css';
 import './Styles/WelcomePage/Welcome.css';

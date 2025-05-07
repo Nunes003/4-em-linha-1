@@ -48,7 +48,7 @@ export default function GameModeSelector({
       {selectedMode === '1vs1' && (
         <div className="select-game-box">
           <div className="player-setup">
-            <label className="piece-selector">Escolha as peças:</label>
+            <label className="piece-selector">Escolha as peças</label>
             <div className="piece-selector-box">
               <PieceSelector
                 label="Jogador 1"
@@ -76,6 +76,8 @@ export default function GameModeSelector({
       {selectedMode === '1vsPC' && (
         <div className="select-game-box">
           <div className="player-setup">
+          <label className="piece-selector">Escolha as peças</label>
+
             <PieceSelector
               label="Jogador"
               value={player3Piece}
