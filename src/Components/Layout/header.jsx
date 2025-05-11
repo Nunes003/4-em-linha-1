@@ -34,12 +34,14 @@ export default function Header() {
         Voltar ao Menu
       </button>
 
-      <button className="top10-btn" onClick={handleTop10Click}>
-        Top 10 Jogadores
-      </button>
-
       <button className="history-btn" onClick={handleHistoryClick}>
+        <img src="history.svg" alt="History Icon" className="history-icon" />
         Histórico de Partidas
+      </button>
+      
+      <button className="top10-btn" onClick={handleTop10Click}>
+        <img src="prize.svg" alt="Top 10 Icon" className="top10-icon" />
+        Top 10 Jogadores
       </button>
 
       {showTop10Popup && <Top10Popup onClose={closeTop10Popup} />}
