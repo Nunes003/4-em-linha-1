@@ -73,14 +73,26 @@ export default function Board({
     const matchData = {
       date: new Date().toLocaleString(),
       mode,
-      players: [
-        { name: player1Name, piece: player1Piece, score: player1Score },
-        { name: player2Name, piece: player2Piece, score: player2Score },
-        player3Name && player3Piece ? { name: player3Name, piece: player3Piece, score: player3Score } : null,
-      ].filter(Boolean),
+      players:
+        mode === '1vsPC'
+          ? [
+              { name: player3Name, piece: player3Piece, score: player3Score },
+              { name: 'Computador', piece: player2Piece, score: player2Score },
+            ]
+          : [
+              { name: player1Name, piece: player1Piece, score: player1Score },
+              { name: player2Name, piece: player2Piece, score: player2Score },
+              player3Name && player3Piece
+                ? { name: player3Name, piece: player3Piece, score: player3Score }
+                : null,
+            ].filter(Boolean),
       winner:
         winningPiece === 'draw'
           ? 'Empate'
+          : mode === '1vsPC'
+          ? winningPiece === player3Piece
+            ? player3Name
+            : 'Computador'
           : winningPiece === player1Piece
           ? player1Name
           : winningPiece === player2Piece
