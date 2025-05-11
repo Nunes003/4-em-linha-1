@@ -62,7 +62,7 @@ export default function MatchHistoryPopup({ onClose }) {
 
         <div className="popup-buttons">
           <button className="popup-close-btn" onClick={onClose}>Fechar</button>
-          <button className="popup-clear-btn" onClick={clearHistory}>Limpar Histórico</button>
+          {/* <button className="popup-clear-btn" onClick={clearHistory}>Limpar Histórico</button> */}
         </div>
       </div>
     </div>
