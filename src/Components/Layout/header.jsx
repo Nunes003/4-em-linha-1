@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Popup from '../Pop-Up/pop-up';
+import Top10Popup from '../Pop-Up/Top10Popup';
 import MatchHistoryPopup from '../Pop-Up/MatchHistoryPopup';
 
 export default function Header() {
@@ -29,6 +29,7 @@ export default function Header() {
   return (
     <header className="game-header">
       <h1>🟡 4 em Linha</h1>
+
       <button onClick={backToMenu} className="return-btn">
         Voltar ao Menu
       </button>
@@ -41,12 +42,7 @@ export default function Header() {
         Histórico de Partidas
       </button>
 
-      {showTop10Popup && (
-        <Popup
-          message="Aqui estão os 10 melhores jogadores!"
-          onClose={closeTop10Popup}
-        />
-      )}
+      {showTop10Popup && <Top10Popup onClose={closeTop10Popup} />}
 
       {showHistoryPopup && <MatchHistoryPopup onClose={closeHistoryPopup} />}
     </header>
