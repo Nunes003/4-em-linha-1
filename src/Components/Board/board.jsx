@@ -68,6 +68,37 @@ export default function Board({
     }
   }, [currentPlayer, board, gameover]);
 
+  // Salvar resultado da partida no localStorage
+  const saveMatchResult = (winningPiece, wasTieBreaker = false) => {
+    const matchData = {
+      date: new Date().toLocaleString(),
+      mode,
+      players: [
+        { name: player1Name, piece: player1Piece, score: player1Score },
+        { name: player2Name, piece: player2Piece, score: player2Score },
+        player3Name && player3Piece ? { name: player3Name, piece: player3Piece, score: player3Score } : null,
+      ].filter(Boolean),
+      winner:
+        winningPiece === 'draw'
+          ? 'Empate'
+          : winningPiece === player1Piece
+          ? player1Name
+          : winningPiece === player2Piece
+          ? player2Name
+          : player3Name,
+      reason:
+        winningPiece === 'draw'
+          ? 'Empate'
+          : wasTieBreaker
+          ? 'Vitória por pontos'
+          : 'Vitória por alinhamento',
+    };
+
+    const existingMatches = JSON.parse(localStorage.getItem('matchHistory')) || [];
+    existingMatches.push(matchData);
+    localStorage.setItem('matchHistory', JSON.stringify(existingMatches));
+  };
+
   // Inicialização do tabuleiro
   const initializeBoard = () => {
     const newBoard = Array(rows)
@@ -213,9 +244,24 @@ export default function Board({
         if (checkWinner(newBoard, targetRow, colIndex, piece)) {
           setGameover(true);
           setWinner(piece);
+          saveMatchResult(piece);
         } else if (isBoardFull(newBoard)) {
-          setGameover(true);
-          setWinner('draw');
+          let maxScore = Math.max(player1Score, player2Score, player3Score);
+          let topScorers = [];
+
+          if (player1Score === maxScore) topScorers.push(player1Piece);
+          if (player2Score === maxScore) topScorers.push(player2Piece);
+          if (player3Name && player3Score === maxScore) topScorers.push(player3Piece);
+
+          if (topScorers.length === 1) {
+            setGameover(true);
+            setWinner(topScorers[0]);
+            saveMatchResult(topScorers[0], true);
+          } else {
+            setGameover(true);
+            setWinner('draw');
+            saveMatchResult('draw');
+          }
         } else if (!playedSpecial) {
           if (mode === '1vs1') {
             setCurrentPlayer(

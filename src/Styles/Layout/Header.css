@@ -19,7 +19,8 @@
 }
 
 .return-btn,
-.top10-btn {
+.top10-btn,
+.history-btn {
   display: flex;
   align-items: center;
 

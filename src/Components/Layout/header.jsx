@@ -1,15 +1,25 @@
 import React, { useState } from 'react';
 import Popup from '../Pop-Up/pop-up';
+import MatchHistoryPopup from '../Pop-Up/MatchHistoryPopup';
 
 export default function Header() {
-  const [showPopup, setShowPopup] = useState(false);
+  const [showTop10Popup, setShowTop10Popup] = useState(false);
+  const [showHistoryPopup, setShowHistoryPopup] = useState(false);
 
   function handleTop10Click() {
-    setShowPopup(true);
+    setShowTop10Popup(true);
   }
 
-  function closePopup() {
-    setShowPopup(false);
+  function handleHistoryClick() {
+    setShowHistoryPopup(true);
+  }
+
+  function closeTop10Popup() {
+    setShowTop10Popup(false);
+  }
+
+  function closeHistoryPopup() {
+    setShowHistoryPopup(false);
   }
 
   function backToMenu() {
@@ -24,15 +34,21 @@ export default function Header() {
       </button>
 
       <button className="top10-btn" onClick={handleTop10Click}>
-          Top 10 Jogadores
-        </button>
+        Top 10 Jogadores
+      </button>
 
-      {showPopup && (
+      <button className="history-btn" onClick={handleHistoryClick}>
+        Histórico de Partidas
+      </button>
+
+      {showTop10Popup && (
         <Popup
           message="Aqui estão os 10 melhores jogadores!"
-          onClose={closePopup}
+          onClose={closeTop10Popup}
         />
       )}
+
+      {showHistoryPopup && <MatchHistoryPopup onClose={closeHistoryPopup} />}
     </header>
   );
 }

@@ -1,0 +1,48 @@
+.match-history {
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.match-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.match-entry {
+  border-bottom: 1px solid #ccc;
+  padding: 10px 0;
+}
+
+.match-date,
+.match-mode,
+.match-winner {
+  margin-bottom: 5px;
+}
+
+.match-players ul {
+  padding-left: 20px;
+}
+
+.player-line {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 4px 0;
+}
+
+.piece-circle {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  display: inline-block;
+  border: 2px solid white;
+}
+
+.piece-circle.red { background-color: #f44336; }
+.piece-circle.yellow { background-color: #ffeb3b; }
+.piece-circle.green { background-color: #4caf50; }
+.piece-circle.purple { background-color: #9c27b0; }
+.piece-circle.rainbow {
+  background: linear-gradient(45deg, red, orange, yellow, green, blue, indigo, violet);
+}
