@@ -55,6 +55,7 @@
   border: none;
   cursor: pointer;
   height: auto;
+  background: white;
 }
 .piece-icon,
 .piece-circle {

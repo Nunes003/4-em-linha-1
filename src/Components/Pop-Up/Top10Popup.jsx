@@ -12,7 +12,7 @@ export default function Top10Popup({ onClose }) {
       const isAgainstComputer = match.mode === '1vsPC';
       const isValidWinner = match.winner && match.winner !== 'Empate';
 
-      if (!isAgainstComputer && isValidWinner) {
+      if (isValidWinner) {
         winCount[match.winner] = (winCount[match.winner] || 0) + 1;
       }
     });

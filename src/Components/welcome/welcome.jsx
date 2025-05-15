@@ -1,64 +1,9 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import Popup from '../Pop-Up/pop-up';
-import GameModeSelector from './gameModeSelector';
-import Board from '../Board/board';
 
 export default function Welcome() {
-  // Estados relacionados a configuração do jogo
-  const [selectedMode, setSelectedMode] = useState('');
-  const [player1Name, setPlayer1Name] = useState('');
-  const [player2Name, setPlayer2Name] = useState('');
-  const [player3Name, setPlayer3Name] = useState('');
-  const [player1Piece, setPlayer1Piece] = useState('R');
-  const [player2Piece, setPlayer2Piece] = useState('Y');
-  const [player3Piece, setPlayer3Piece] = useState('R');
-
-  // Estados relacionados a UI
   const [showInstructions, setShowInstructions] = useState(false);
-  const [popupMessage, setPopupMessage] = useState('');
-  const [showPopup, setShowPopup] = useState(false);
-  const [gameStarted, setGameStarted] = useState(false);
 
-  // Validação dos dados antes de iniciar o jogo
-  const validatePlayers = () => {
-    console.log('Modo de Jogo Selecionado:', selectedMode);
-
-    if (selectedMode === '1vs1') {
-      if (!player1Name || !player2Name) {
-        setPopupMessage('Preencha o nome dos jogadores.');
-        setShowPopup(true);
-        return false;
-      }
-
-      if (player1Name.trim().toLowerCase() === player2Name.trim().toLowerCase()) {
-        setPopupMessage('Os nomes dos jogadores não podem ser iguais.');
-        setShowPopup(true);
-        return false;
-      }
-
-      if (player1Piece === player2Piece) {
-        setPopupMessage('Cada jogador deve escolher uma peça diferente.');
-        setShowPopup(true);
-        return false;
-      }
-    }
-
-    if (selectedMode === '1vsPC') {
-      if (!player3Name) {
-        setPopupMessage('Preencha o nome do jogador.');
-        setShowPopup(true);
-        return false;
-      }
-    }
-
-    setGameStarted(true);
-    
-    document.querySelector('.return-btn').style.display = 'block';
-    document.querySelector('.top10-btn').style.display = 'none';
-    return true;
-  };
-
-  // Conteúdo das instruções
   const instructionsContent = (
     <div className="instructions-container">
       <span className="instructions-title">Como jogar?</span>
@@ -69,11 +14,15 @@ export default function Welcome() {
         </div>
         <div className="instruction-row">
           <span className="instructions-text">🟡</span>
-          <span>O objetivo é alinhar 4 peças na horizontal, vertical ou diagonal.</span>
+          <span>
+            O objetivo é alinhar 4 peças na horizontal, vertical ou diagonal.
+          </span>
         </div>
         <div className="instruction-row">
           <span className="instructions-text">🎯</span>
-          <span>Clique na coluna para soltar a peça. O primeiro a alinhar 4 vence!</span>
+          <span>
+            Clique na coluna para soltar a peça. O primeiro a alinhar 4 vence!
+          </span>
         </div>
         <div className="instruction-row">
           <span className="instructions-text">🟢</span>
@@ -81,7 +30,9 @@ export default function Welcome() {
         </div>
         <div className="instruction-row">
           <span className="instructions-text">🟣</span>
-          <span>Caso o jogador ganhe a jogada bónus, o mesmo pode jogar novamente.</span>
+          <span>
+            Caso o jogador ganhe a jogada bónus, o mesmo pode jogar novamente.
+          </span>
         </div>
       </div>
     </div>
@@ -91,65 +42,36 @@ export default function Welcome() {
     <div className="welcome-container">
       <span className="title-welcome">Bem-vindo Jogador!</span>
 
-      {!gameStarted ? (
-        <GameModeSelector
-          selectedMode={selectedMode}
-          setSelectedMode={setSelectedMode}
-          player1Piece={player1Piece}
-          setPlayer1Piece={setPlayer1Piece}
-          player2Piece={player2Piece}
-          setPlayer2Piece={setPlayer2Piece}
-          player3Piece={player3Piece}
-          setPlayer3Piece={setPlayer3Piece}
-          player1Name={player1Name}
-          setPlayer1Name={setPlayer1Name}
-          player2Name={player2Name}
-          setPlayer2Name={setPlayer2Name}
-          player3Name={player3Name}
-          setPlayer3Name={setPlayer3Name}
-          validatePlayers={validatePlayers}
-        />
-      ) : (
-        <Board
-          mode={selectedMode}
-          player1Name={player1Name}
-          player2Name={player2Name}
-          player3Name={player3Name}
-          player1Piece={player1Piece}
-          player2Piece={player2Piece}
-          player3Piece={player3Piece}
-        />
-      )}
-
-      <button
-        className="how-to-play-btn"
-        onClick={() => setShowInstructions(!showInstructions)}
-      >
-        {showInstructions ? (
-          'Esconder Instruções'
-        ) : (
-          <div className="how-to-play-content">
-            <img
-              className="how-to-play-icon"
-              src="./settings.svg"
-              alt="Instruções"
-            />
-            <span>Como jogar?</span>
-          </div>
-        )}
-      </button>
-
+      <p className="welcome-description">
+        O clássico jogo de estratégia! Conecte 4 peças da sua cor antes do seu
+        adversário.
+      </p>
+      <div style={{ display: 'flex', gap:"20px" ,alignItems: 'center' }}>
+      <a href="/game-menu" className="button">
+        <button>Jogar</button>
+      </a>
+      
+        <button
+          className="how-to-play-btn"
+          onClick={() => setShowInstructions(!showInstructions)}>
+          {showInstructions ? (
+            'Esconder Instruções'
+          ) : (
+            <div className="how-to-play-content">
+              <img
+                className="how-to-play-icon"
+                src="./settings.svg"
+                alt="Instruções"
+              />
+              <span>Como jogar?</span>
+            </div>
+          )}
+        </button>
+      </div>
       {showInstructions && (
         <Popup
           message={instructionsContent}
           onClose={() => setShowInstructions(false)}
-        />
-      )}
-
-      {showPopup && (
-        <Popup
-          message={popupMessage}
-          onClose={() => setShowPopup(false)}
         />
       )}
     </div>

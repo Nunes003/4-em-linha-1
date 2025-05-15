@@ -23,12 +23,12 @@ export default function Header() {
   }
 
   function backToMenu() {
-    window.location.href = 'http://localhost:3000/';
+    window.location.href = '/game-menu';
   }
 
   return (
     <header className="game-header">
-      <h1>🟡 4 em Linha</h1>
+      <a href='/' style={{textDecoration: "none" , color: "white"}}><h1>🟡 4 em Linha</h1></a>
 
       <button onClick={backToMenu} className="return-btn">
         Voltar ao Menu

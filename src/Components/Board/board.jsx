@@ -48,7 +48,7 @@ export default function Board({
   // Efeitos colaterais
   useEffect(() => {
     initializeBoard();
-    document.querySelector('.title-welcome').innerText = 'Boa sorte Jogadores!';
+    // document.querySelector('.title-welcome').innerText = 'Boa sorte Jogadores!';
   }, []);
 
   useEffect(() => {

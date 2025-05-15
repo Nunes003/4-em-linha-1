@@ -1,3 +1,4 @@
+.GameMenu-container,
 .welcome-container {
   display: flex;
   flex-direction: column;
@@ -5,6 +6,44 @@
   text-align: center;
   color: #ffffff;
   padding: 50px 20px;
+}
+/* Adicione isso ao seu arquivo de estilos */
+
+.button {
+  text-decoration: none; /* Remove sublinhado do link */
+  display: inline-block;
+  margin: 20px 0;
+}
+
+.button button {
+      border: 2px solid white;
+    background: linear-gradient(to right, #00c6ff, #0072ff);
+    color: white;
+    /* border: none; */
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 18px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 8px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+    min-width: 175px;
+}
+
+.button button:hover {
+  background-color: #45a049; /* Verde mais escuro no hover */
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+.button button:active {
+  transform: translateY(1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .title-welcome {
@@ -21,7 +60,7 @@
   font-size: 1rem;
   border-radius: 8px;
   cursor: pointer;
-  margin-top: 20px;
+  /* margin-top: 20px; */
 }
 
 .how-to-play-btn:hover {
@@ -53,7 +92,6 @@
   text-align: left;
 }
 
-
 .instructions-container {
   display: flex;
   flex-direction: column;
@@ -65,7 +103,7 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   max-width: 450px;
   margin: 0 auto;
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .instructions-title {
@@ -90,4 +128,12 @@
   color: #444;
 }
 
+.game-tip {
+  margin-top: 2rem;
+  padding: 0.8rem;
+  background: #fff8e1;
+  border-radius: 8px;
+  color: #e67e22;
+  font-size: 0.9rem;
+}
 

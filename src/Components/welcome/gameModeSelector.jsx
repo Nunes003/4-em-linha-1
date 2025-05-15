@@ -1,4 +1,5 @@
 import PieceSelector from './PieceSelector';
+import GameTips from './Tips';
 
 export default function GameModeSelector({
   selectedMode,
@@ -17,16 +18,9 @@ export default function GameModeSelector({
   setPlayer3Name,
   validatePlayers,
 }) {
-
-  
-
   return (
     <>
-      <p className="welcome-description">
-        O clássico jogo de estratégia! Conecte 4 peças da sua cor antes do seu
-        adversário.
-      </p>
-
+      <p className="welcome-description">Escolha o modo de Jogo:</p>
       <div className="button-group">
         <button
           className={`game-mode-btn ${selectedMode === '1vs1' ? 'active' : ''}`}
@@ -37,13 +31,17 @@ export default function GameModeSelector({
         </button>
 
         <button
-          className={`game-mode-btn ${selectedMode === '1vsPC' ? 'active' : ''}`}
+          className={`game-mode-btn ${
+            selectedMode === '1vsPC' ? 'active' : ''
+          }`}
           onClick={() =>
             setSelectedMode(selectedMode !== '1vsPC' ? '1vsPC' : '')
           }>
           🧠 1 vs PC
         </button>
       </div>
+
+      {!selectedMode && <GameTips />}
 
       {selectedMode === '1vs1' && (
         <div className="select-game-box">
@@ -76,7 +74,7 @@ export default function GameModeSelector({
       {selectedMode === '1vsPC' && (
         <div className="select-game-box">
           <div className="player-setup">
-          <label className="piece-selector">Escolha as peças</label>
+            <label className="piece-selector">Escolha as peças</label>
 
             <PieceSelector
               label="Jogador"
