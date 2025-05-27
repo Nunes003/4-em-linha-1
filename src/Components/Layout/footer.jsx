@@ -1,6 +1,7 @@
 import React from 'react';
 
 const Footer = () => {
+  const Pdf = '/Relatorio_Final_LS.pdf';
   return (
     <footer className="footer">
       <p>&copy; {new Date().getFullYear()} Conect 4 - Desenvolvido por: </p>
@@ -10,11 +11,18 @@ const Footer = () => {
           href="https://github.com/Nunes003/4-em-linha-1.git"
           target="_blank"
           rel="noopener noreferrer"
-          className="footer-link"
-        >
+          className="footer-link">
           Ver código no GitHub
         </a>
       </p>
+      <a
+        href={Pdf}
+        download
+        target="_blank"
+        rel="noopener noreferrer"
+        className="download-link">
+        Download Relatório (Pdf)
+      </a>
     </footer>
   );
 };
