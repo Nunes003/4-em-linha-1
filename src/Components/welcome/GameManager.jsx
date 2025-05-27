@@ -1,9 +1,9 @@
 import { useState } from 'react';
-import Popup from '../Pop-Up/pop-up';
+import Popup from '../Pop-Up/Pop-up';
 import GameModeSelector from './GameModeSelector';
-import Board from '../Board/board';
+import Board from '../Board/Board';
 
-export default function GameMenu(){
+export default function GameManager(){
   // Estados relacionados a configuração do jogo
   const [selectedMode, setSelectedMode] = useState('');
   const [player1Name, setPlayer1Name] = useState('');
@@ -20,6 +20,7 @@ export default function GameMenu(){
 
   // Validação dos dados antes de iniciar o jogo
   const validatePlayers = () => {
+    
     console.log('Modo de Jogo Selecionado:', selectedMode);
 
     if (selectedMode === '1vs1') {

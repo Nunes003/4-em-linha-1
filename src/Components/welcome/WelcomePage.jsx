@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import Popup from '../Pop-Up/pop-up';
+import Popup from '../Pop-Up/Pop-up';
 
-export default function Welcome() {
+export default function WelcomePage() {
   const [showInstructions, setShowInstructions] = useState(false);
 
   const instructionsContent = (
