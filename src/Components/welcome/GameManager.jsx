@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Popup from '../Pop-Up/Pop-up';
 import GameModeSelector from './GameModeSelector';
 import Board from '../Board/Board';
@@ -18,11 +18,21 @@ export default function GameManager(){
   const [showPopup, setShowPopup] = useState(false);
   const [gameStarted, setGameStarted] = useState(false);
 
-  // Validação dos dados antes de iniciar o jogo
-  const validatePlayers = () => {
-    
+  useEffect(() => {
+ 
     console.log('Modo de Jogo Selecionado:', selectedMode);
+    console.log('Nome do Jogador 1:', player1Name);
+    console.log('Peça do Jogador 1:', player1Piece);
+    console.log('Nome do Jogador 2:', player2Name);
+    console.log('Peça do Jogador 2:', player2Piece);
+    console.log('Nome do Jogador 3:', player3Name);
+    console.log('Peça do Jogador 3:', player3Piece);
+    console.log('--------------------------------------');
 
+  }, [selectedMode, player1Name, player2Name, player3Name, player1Piece, player2Piece, player3Piece]);
+
+  // Validação dos dados antes de iniciar o jogo
+  const validatePlayers = () => {  
     if (selectedMode === '1vs1') {
       if (!player1Name || !player2Name) {
         setPopupMessage('Preencha o nome dos jogadores.');
