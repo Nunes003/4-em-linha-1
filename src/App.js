@@ -1,4 +1,4 @@
-import Layout from './Components/Layout/layout';
+import Layout from './Components/Layout/Layout';
 import './Styles/App.css';
 import './Styles/Responsive.css';
 import './Styles/Board/Board.css';

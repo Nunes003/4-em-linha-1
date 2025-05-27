@@ -1,5 +1,3 @@
-import React from 'react';
-
 export default function BoardHeader({
   mode,
   currentPlayer,
@@ -17,9 +15,8 @@ export default function BoardHeader({
   player2Piece,
   player3Piece,
 }) {
-  
 
-  
+
   return (
     <>
       <div className="scores">
@@ -37,7 +34,7 @@ export default function BoardHeader({
             <span className={`turno ${getPieceClass(player2Piece)}`}>
               Computador: {player2Score} pontos
             </span>
-            
+
             <span className={`turno ${getPieceClass(player3Piece)}`}>
               {player3Name}: {player3Score} pontos
             </span>

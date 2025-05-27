@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import Welcome from './Components/welcome/Welcome.jsx';
-import GameMenu from './Components/welcome/GameMenu.jsx';
+import Welcome from './Components/welcome/WelcomePage.jsx';
+import GameMenu from './Components/welcome/GameManager.jsx';
 
 const RoutesComponent = () => {
     return (

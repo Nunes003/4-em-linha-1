@@ -7,6 +7,8 @@ export default function MatchHistoryPopup({ onClose }) {
   useEffect(() => {
     const stored = JSON.parse(localStorage.getItem('matchHistory')) || [];
     setMatches(stored.reverse());
+
+    console.log('Histórico de partidas carregado:', stored);
   }, []);
 
   const getPieceColorClass = (piece) => {
@@ -45,38 +47,55 @@ export default function MatchHistoryPopup({ onClose }) {
           <p>Nenhuma partida registrada.</p>
         ) : (
           <ul className="match-list">
-  {matches.map((match, index) => (
-    <li key={index} className="match-card">
-      <div className="match-content">
-        <div className="match-section">
-          <p><strong>Modo:</strong> {match.mode}</p>
-        </div>
+            {matches.map((match, index) => (
+              <li key={index} className="match-card">
+                <div className="match-content">
+                  <div className="match-section">
+                    <p>
+                      <strong>Modo:</strong> {match.mode}
+                    </p>
+                  </div>
 
-        <div className="match-section">
-          <strong>Jogadores:</strong>
-          <ul className="player-list">
-            {match.players.map((player, i) => (
-              <li key={i} className="player-line">
-                <span className={`piece-icon ${getPieceColorClass(player.piece)}`}></span>
-                <span>{player.name} — {player.score} ponto(s)</span>
+                  <div className="match-section">
+                    <strong>Jogadores:</strong>
+                    <ul className="player-list">
+                      {match.players.map((player, i) => (
+                        <li key={i} className="player-line">
+                          <span
+                            className={`piece-icon ${getPieceColorClass(
+                              player.piece
+                            )}`}></span>
+                          <span>
+                            {player.name} — {player.score} ponto(s)
+                          </span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  <div className="match-section">
+                    <p>
+                      <strong>Vencedor:</strong> {match.winner}
+                    </p>
+                    {match.reason && (
+                      <p className="match-reason">
+                        <em>
+                          <strong>Tipo de vitória: </strong>
+                          {match.reason}
+                        </em>
+                      </p>
+                    )}
+                  </div>
+
+                  <div className="match-date">
+                    <p>
+                      <strong>Data:</strong> {match.date}
+                    </p>
+                  </div>
+                </div>
               </li>
             ))}
           </ul>
-        </div>
-
-        <div className="match-section">
-          <p><strong>Vencedor:</strong> {match.winner}</p>
-          {match.reason && <p className="match-reason"><em><strong>Tipo de vitória: </strong>{match.reason}</em></p>}
-        </div>
-
-        <div className="match-date">
-          <p><strong>Data:</strong> {match.date}</p>
-        </div>
-      </div>
-    </li>
-  ))}
-</ul>
-
         )}
 
         <div className="popup-buttons">

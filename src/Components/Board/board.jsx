@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
-import BoardHeader from './boardHeader';
-import FloatingPiece from './floatingPiece';
-import GameCell from './gameCell';
+import BoardHeader from './BoardHeader';
+import FloatingPiece from './FloatingPiece';
+import GameCell from './GameCell';
 import { checkWinner, isBoardFull } from './gameLogic';
 import useTimer from './useTimer';
 
@@ -113,9 +113,7 @@ export default function Board({
 
   // Inicialização do tabuleiro
   const initializeBoard = () => {
-    const newBoard = Array(rows)
-      .fill(null)
-      .map(() => Array(columns).fill(null));
+    const newBoard = Array(rows).fill(null).map(() => Array(columns).fill(null));
     setBoard(newBoard);
 
     let initialPlayer;
