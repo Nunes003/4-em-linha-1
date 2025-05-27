@@ -121,3 +121,15 @@
   transform: scale(0.97);
   box-shadow: 0 3px 8px rgba(0, 114, 255, 0.5);
 }
+
+.label-player {
+  max-width: 193px !important;
+}
+
+.secondary-selector-box {
+  display: flex;
+  gap: 30px;
+  /* flex-wrap: nowrap; */
+  justify-content: center;
+  margin-top: 20px;
+}
