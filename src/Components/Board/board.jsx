@@ -33,7 +33,7 @@ export default function Board({
 
   // Células especiais
   const [specialCells, setSpecialCells] = useState([]);
-  const [revealedSpecials, setRevealedSpecials] = useState([]);
+  // const [revealedSpecials, setRevealedSpecials] = useState([]);
 
   // Temporizador
   const [isTimerActive, setIsTimerActive] = useState(true);
@@ -134,7 +134,7 @@ export default function Board({
 
     setCurrentPlayer(initialPlayer);
     setSpecialCells(generateSpecialCells());
-    setRevealedSpecials([]);
+    // setRevealedSpecials([]);
     setGameover(false);
     setWinner(null);
     resetTimer();
@@ -257,20 +257,29 @@ export default function Board({
         const cellKey = `${targetRow}-${colIndex}`;
         const playedSpecial = specialCells.includes(cellKey);
 
-        if (playedSpecial && !revealedSpecials.includes(cellKey)) {
-          setRevealedSpecials((prev) => [...prev, cellKey]);
+        if (playedSpecial) {
           const scoreSetter = getScoreSetterByPiece(piece);
           if (scoreSetter) scoreSetter((prev) => prev + 1);
         }
 
+        // if (playedSpecial && !revealedSpecials.includes(cellKey)) {
+        //   setRevealedSpecials((prev) => [...prev, cellKey]);
+        //   const scoreSetter = getScoreSetterByPiece(piece);
+        //   if (scoreSetter) scoreSetter((prev) => prev + 1);
+        // }
+
         if (checkWinner(newBoard, targetRow, colIndex, piece)) {
           setGameover(true);
           setWinner(piece);
+          setIsTimerActive(false);
           saveMatchResult(piece);
+          setBoard(newBoard);
+          setFallingPiece(null);
+          return;
         } else if (isBoardFull(newBoard)) {
           let maxScore = Math.max(player1Score, player2Score, player3Score);
           let topScorers = [];
-
+          setIsTimerActive(false);
           if (player1Score === maxScore) topScorers.push(player1Piece);
           if (player2Score === maxScore) topScorers.push(player2Piece);
           if (player3Name && player3Score === maxScore)
@@ -285,6 +294,9 @@ export default function Board({
             setWinner('draw');
             saveMatchResult('draw');
           }
+          setBoard(newBoard);
+          setFallingPiece(null);
+          return;
         } else if (!playedSpecial) {
           if (mode === '1vs1') {
             setCurrentPlayer(
