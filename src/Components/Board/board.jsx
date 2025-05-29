@@ -14,7 +14,6 @@ export default function Board({
   player2Piece,
   player3Piece,
 }) {
-
   // Constantes
   const rows = 6;
   const columns = 7;
@@ -83,7 +82,11 @@ export default function Board({
               { name: player1Name, piece: player1Piece, score: player1Score },
               { name: player2Name, piece: player2Piece, score: player2Score },
               player3Name && player3Piece
-                ? { name: player3Name, piece: player3Piece, score: player3Score }
+                ? {
+                    name: player3Name,
+                    piece: player3Piece,
+                    score: player3Score,
+                  }
                 : null,
             ].filter(Boolean),
       winner:
@@ -106,14 +109,17 @@ export default function Board({
           : 'Vitória por alinhamento',
     };
 
-    const existingMatches = JSON.parse(localStorage.getItem('matchHistory')) || [];
+    const existingMatches =
+      JSON.parse(localStorage.getItem('matchHistory')) || [];
     existingMatches.push(matchData);
     localStorage.setItem('matchHistory', JSON.stringify(existingMatches));
   };
 
   // Inicialização do tabuleiro
   const initializeBoard = () => {
-    const newBoard = Array(rows).fill(null).map(() => Array(columns).fill(null));
+    const newBoard = Array(rows)
+      .fill(null)
+      .map(() => Array(columns).fill(null));
     setBoard(newBoard);
 
     let initialPlayer;
@@ -217,9 +223,15 @@ export default function Board({
   const makeMove = (colIndex, piece) => {
     if (fallingPiece) return;
 
+    if (board[0][colIndex] !== null) {
+      console.log('Esta coluna está cheia!');
+      return;
+    }
+
     const newBoard = board.map((row) => [...row]);
     let targetRow = -1;
 
+    // Encontrar a linha mais baixa disponível na coluna
     for (let row = rows - 1; row >= 0; row--) {
       if (!newBoard[row][colIndex]) {
         targetRow = row;
@@ -261,7 +273,8 @@ export default function Board({
 
           if (player1Score === maxScore) topScorers.push(player1Piece);
           if (player2Score === maxScore) topScorers.push(player2Piece);
-          if (player3Name && player3Score === maxScore) topScorers.push(player3Piece);
+          if (player3Name && player3Score === maxScore)
+            topScorers.push(player3Piece);
 
           if (topScorers.length === 1) {
             setGameover(true);
@@ -421,9 +434,7 @@ export default function Board({
                     onMouseEnter={handleMouseEnter}
                     onMouseLeave={handleMouseLeave}
                     isSpecial={specialCells.includes(`${rowIndex}-${colIndex}`)}
-                    isRevealed={revealedSpecials.includes(
-                      `${rowIndex}-${colIndex}`
-                    )}
+                    isHoveredCol={hoveredCol === colIndex}
                     getPieceClass={getPieceClass}
                   />
                 ))}

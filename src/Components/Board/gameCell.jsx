@@ -6,16 +6,17 @@ export default function GameCell({
     onMouseEnter,
     onMouseLeave,
     isSpecial,
-    isRevealed,
+    isHoveredCol,
     getPieceClass,
   }) {
     return (
       <div
-        className={`cell ${getPieceClass(cell)} ${isSpecial && isRevealed ? "special-cell" : ""}`}
+        className={`cell ${getPieceClass(cell)}${
+          isSpecial ? " special-cell" : ""
+        }${isHoveredCol ? " hovered-col" : ""}`}
         onClick={() => onClick(colIndex)}
         onMouseEnter={() => onMouseEnter(colIndex)}
         onMouseLeave={onMouseLeave}
       />
     );
   }
-  
