@@ -59,7 +59,7 @@ export default function BoardHeader({
             </div>
           )}
 
-          <div className={`timer ${timer <= 4 ? 'timer-warning' : ''}`}>
+          <div className={`timer ${timer >= 6 ? 'timer-warning' : ''}`}>
             <img className="img-timer" src="./timer.png" alt="timer" />
             {timer} s
           </div>
