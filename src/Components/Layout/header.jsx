@@ -28,22 +28,22 @@ export default function Header() {
 
   return (
     <header className="game-header">
-      <a href='/' style={{textDecoration: "none" , color: "white"}}><h1>🟡 4 em Linha</h1></a>
+      <a href="/" style={{ textDecoration: 'none', color: 'white' }}>
+        <h1>🟡 4 em Linha</h1>
+      </a>
+      <div className="header-buttons">
+        <button onClick={backToMenu} className="return-btn">
+          <img src='return.svg' alt='return' className="history-icon" />
+        </button>
 
-      <button onClick={backToMenu} className="return-btn">
-        Voltar ao Menu
-      </button>
+        <button className="history-btn" onClick={handleHistoryClick}>
+          <img src="history.svg" alt="History Icon" className="history-icon" />
+        </button>
 
-      <button className="history-btn" onClick={handleHistoryClick}>
-        <img src="history.svg" alt="History Icon" className="history-icon" />
-        Histórico de Partidas
-      </button>
-      
-      <button className="top10-btn" onClick={handleTop10Click}>
-        <img src="prize.svg" alt="Top 10 Icon" className="top10-icon" />
-        Top 10 Jogadores
-      </button>
-
+        <button className="top10-btn" onClick={handleTop10Click}>
+          <img src="prize.svg" alt="Top 10 Icon" className="top10-icon" />
+        </button>
+      </div>
       {showTop10Popup && <Top10Popup onClose={closeTop10Popup} />}
 
       {showHistoryPopup && <MatchHistoryPopup onClose={closeHistoryPopup} />}
