@@ -61,7 +61,7 @@ export default function Board({
       const timeout = setTimeout(() => {
         playPCMove();
         setIsTimerActive(true);
-      }, 2000);
+      }, 1000);
 
       return () => clearTimeout(timeout);
     }

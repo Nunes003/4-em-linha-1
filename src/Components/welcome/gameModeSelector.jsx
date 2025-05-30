@@ -134,25 +134,25 @@ export default function GameModeSelector({
       {selectedMode === '1vs1' && (
         <div className="select-game-box">
           <div className="player-setup">
-            <label className="piece-selector">Escolha de Nomes</label>
+            <label className="piece-selector label-player">Escolha de Nomes</label>
             <div style={{ display: 'flex' }}>
               <div className="secondary-selector-box">
                 <div className="piece-selector">
-                  <label>Nome do Jogador 1</label>
+                  <label  className="label-player">Jogador 1</label>
                   <input
-                    className="label-player"
+                   
                     type="text"
-                    placeholder="Nome do Jogador 1"
+                    // placeholder="Nome do Jogador 1"
                     value={player1Name}
                     onChange={(e) => setPlayer1Name(e.target.value)}
                   />
                 </div>
                 <div className="piece-selector">
-                  <label>Nome do Jogador 2</label>
+                  <label  className="label-player">Jogador 2</label>
                   <input
-                    className="label-player"
+                   
                     type="text"
-                    placeholder="Nome do Jogador 2"
+                    // placeholder="Nome do Jogador 2"
                     value={player2Name}
                     onChange={(e) => setPlayer2Name(e.target.value)}
                   />
@@ -169,10 +169,10 @@ export default function GameModeSelector({
       {selectedMode === '1vsPC' && (
         <div className="select-game-box">
           <div className="player-setup">
-            <label>Nome do Jogador</label>
+            <label className='label-player'>Nome do Jogador</label>
             <input
               type="text"
-              placeholder="Nome do Jogador"
+              // placeholder="Nome do Jogador"
               value={player3Name}
               onChange={(e) => setPlayer3Name(e.target.value)}
             />
