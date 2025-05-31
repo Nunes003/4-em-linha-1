@@ -104,8 +104,8 @@ export default function Board({
       reason:
         winningPiece === 'draw'
           ? 'Empate'
-          : wasTieBreaker
-          ? 'Vitória por pontos'
+          // : wasTieBreaker
+          // ? 'Vitória por pontos'
           : 'Vitória por alinhamento',
     };
 
@@ -277,23 +277,10 @@ export default function Board({
           setFallingPiece(null);
           return;
         } else if (isBoardFull(newBoard)) {
-          let maxScore = Math.max(player1Score, player2Score, player3Score);
-          let topScorers = [];
           setIsTimerActive(false);
-          if (player1Score === maxScore) topScorers.push(player1Piece);
-          if (player2Score === maxScore) topScorers.push(player2Piece);
-          if (player3Name && player3Score === maxScore)
-            topScorers.push(player3Piece);
-
-          if (topScorers.length === 1) {
-            setGameover(true);
-            setWinner(topScorers[0]);
-            saveMatchResult(topScorers[0], true);
-          } else {
-            setGameover(true);
-            setWinner('draw');
-            saveMatchResult('draw');
-          }
+          setGameover(true);
+          setWinner('draw');
+          saveMatchResult('draw');
           setBoard(newBoard);
           setFallingPiece(null);
           return;
