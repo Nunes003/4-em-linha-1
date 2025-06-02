@@ -33,7 +33,7 @@ export default function Board({
 
   // Células especiais
   const [specialCells, setSpecialCells] = useState([]);
-  // const [revealedSpecials, setRevealedSpecials] = useState([]);
+  const [revealedSpecials, setRevealedSpecials] = useState([]);
 
   // Temporizador
   const [isTimerActive, setIsTimerActive] = useState(true);
@@ -117,9 +117,7 @@ export default function Board({
 
   // Inicialização do tabuleiro
   const initializeBoard = () => {
-    const newBoard = Array(rows)
-      .fill(null)
-      .map(() => Array(columns).fill(null));
+    const newBoard = Array(rows).fill(null).map(() => Array(columns).fill(null));
     setBoard(newBoard);
 
     let initialPlayer;
@@ -134,7 +132,7 @@ export default function Board({
 
     setCurrentPlayer(initialPlayer);
     setSpecialCells(generateSpecialCells());
-    // setRevealedSpecials([]);
+    //setRevealedSpecials([]);
     setGameover(false);
     setWinner(null);
     resetTimer();
@@ -147,12 +145,14 @@ export default function Board({
 
   // Células especiais
   const generateSpecialCells = () => {
+    // set armazena valres únicos para não haver peças repetidas
     const special = new Set();
     while (special.size < 5) {
       const row = Math.floor(Math.random() * rows);
       const col = Math.floor(Math.random() * columns);
       special.add(`${row}-${col}`);
     }
+    console.log('Células especiais geradas:', special);
     return Array.from(special);
   };
 
@@ -163,8 +163,9 @@ export default function Board({
 
     let skippedName = '';
     if (mode === '1vsPC') {
-      skippedName = player3Name;
+      skippedName = player3Name; 
     } else {
+      // Determinar o nome do jogador que foi pulado
       skippedName =
         currentPlayer === player1Piece
           ? player1Name
@@ -175,6 +176,7 @@ export default function Board({
 
     setSkippedPlayer({ name: skippedName, piece: currentPlayer });
 
+    // apos 2 segundos, troca o jogador
     setTimeout(() => {
       if (mode === '1vs1') {
         setCurrentPlayer(
@@ -202,8 +204,8 @@ export default function Board({
 
   // Jogada do computador
   const playPCMove = () => {
-    const validCols = board[0]
-      .map((cell, colIndex) => (cell === null ? colIndex : null))
+    // Encontra as colunas válidas (onde a primeira linha está vazia)
+    const validCols = board[0].map((cell, colIndex) => (cell === null ? colIndex : null))
       .filter((col) => col !== null);
 
     if (validCols.length === 0) return;
@@ -215,13 +217,14 @@ export default function Board({
   // Clique na célula
   const handleClick = (colIndex) => {
     if (gameover) return;
-    if (mode === '1vsPC' && currentPlayer !== player3Piece) return;
+    if (mode === '1vsPC' && currentPlayer !== player3Piece) return; // Evita jogadas se não for a vez do jogador3
     makeMove(colIndex, currentPlayer);
   };
 
   // Realizar jogada
   const makeMove = (colIndex, piece) => {
-    if (fallingPiece) return;
+    if (fallingPiece) return; //Evita jogadas enquanto uma peça está a cair
+
 
     if (board[0][colIndex] !== null) {
       console.log('Esta coluna está cheia!');
@@ -252,8 +255,10 @@ export default function Board({
       if (currentRow > targetRow) {
         clearInterval(interval);
 
+        // Coloca a peça na posição final
         newBoard[targetRow][colIndex] = piece;
 
+        // Verifica se a célula é especial
         const cellKey = `${targetRow}-${colIndex}`;
         const playedSpecial = specialCells.includes(cellKey);
 
@@ -275,7 +280,9 @@ export default function Board({
           saveMatchResult(piece);
           setBoard(newBoard);
           setFallingPiece(null);
+          // document.querySelector('.restart-btn').style.display = 'none';
           return;
+          // Verifica o empate
         } else if (isBoardFull(newBoard)) {
           setIsTimerActive(false);
           setGameover(true);
@@ -301,6 +308,16 @@ export default function Board({
                 ? player2Piece
                 : player1Piece
             );
+            //outra maneira de trocar o jogador
+            // if(piece === player1Piece)
+            // {
+            //   setCurrentPlayer(player3Piece);
+            // } else if(piece === player3Piece){
+            //   setCurrentPlayer(player2Piece);
+            // } else {
+            //   setCurrentPlayer(player1Piece);
+            // }
+          
           }
         }
 
@@ -311,6 +328,7 @@ export default function Board({
         return;
       }
 
+      // Atualiza a peça que está caindo
       setFallingPiece({ col: colIndex, row: currentRow, piece });
       currentRow++;
     }, 80);
@@ -433,6 +451,7 @@ export default function Board({
                     onMouseEnter={handleMouseEnter}
                     onMouseLeave={handleMouseLeave}
                     isSpecial={specialCells.includes(`${rowIndex}-${colIndex}`)}
+                    //isRevealedSpecial={revealedSpecials.includes(`${rowIndex}-${colIndex}`)}
                     isHoveredCol={hoveredCol === colIndex}
                     getPieceClass={getPieceClass}
                   />

@@ -7,9 +7,12 @@ export default function GameCell({
     onMouseLeave,
     isSpecial,
     isHoveredCol,
+    isRevealedSpecial,
     getPieceClass,
   }) {
     return (
+      // deixar esconsido as celulas especiais
+      //{isRevealedSpecial ? " special-cell" : ""}
       <div
         className={`cell ${getPieceClass(cell)}${
           isSpecial ? " special-cell" : ""

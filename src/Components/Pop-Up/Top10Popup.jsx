@@ -17,6 +17,7 @@ export default function Top10Popup({ onClose }) {
       }
     });
 
+    // Ordena os jogadores por número de vitórias e pega os 10 melhores
     const sortedTop = Object.entries(winCount)
       .map(([name, wins]) => ({ name, wins }))
       .sort((a, b) => b.wins - a.wins)
